@@ -58,7 +58,7 @@ jobs:
         run: |
           set -o pipefail
           docker run -d --name heart-api -p 8000:8000 heart-disease-api:ci
-          scripts/smoke_test.sh http://localhost:8000 2>&1 | tee ci-output/smoke.txt
+          bash scripts/smoke_test.sh http://localhost:8000 2>&1 | tee ci-output/smoke.txt
 
       - name: Container logs
         if: always()
