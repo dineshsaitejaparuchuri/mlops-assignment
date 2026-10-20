@@ -1,0 +1,26 @@
+$ docker build -t heart-disease-api:latest .
+... (build succeeded, see docs/run_outputs/docker_build.txt)
+$ docker run -d --name heart-api -p 8000:8000 heart-disease-api:latest
+$ docker ps
+IMAGE                      STATUS                    PORTS                                         NAMES
+heart-disease-api:latest   Up 33 seconds (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp   heart-api
+$ docker exec heart-api id -u
+10001
+$ docker exec heart-api ls -l models/model.joblib
+-rw-r--r-- 1 app app 5680 Oct 10 14:32 models/model.joblib
+$ docker inspect -f {{.State.Health.Status}} heart-api
+healthy
+$ scripts/smoke_test.sh http://localhost:8000
+GET /health
+{"status":"ok","model_loaded":true}
+POST /predict
+{"prediction":1,"label":"heart disease","confidence":0.848,"probability_disease":0.848}
+GET /metrics
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 1475.0
+python_gc_objects_collected_total{generation="1"} 55.0
+python_gc_objects_collected_total{generation="2"} 20.0
+smoke test passed
+$ curl -X POST /predict -d {"age":"x"}  -> HTTP status
+422

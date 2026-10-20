@@ -1,0 +1,90 @@
+{
+  "best_run": "logreg-C0.3",
+  "model_type": "logreg",
+  "params": {
+    "C": 0.3
+  },
+  "decision_threshold": 0.26,
+  "target_recall": 0.9,
+  "mlflow_run_id": "a7a6cacd42654ff5b74e3997b240d19b",
+  "registered_model": {
+    "name": "heart-disease-classifier",
+    "version": "2"
+  },
+  "cv_metrics": {
+    "accuracy": 0.846938775510204,
+    "precision": 0.8769053708439897,
+    "recall": 0.7830039525691699,
+    "roc_auc": 0.9038005472788081
+  },
+  "test_metrics_at_0.5": {
+    "accuracy": 0.9016393442622951,
+    "precision": 0.8666666666666667,
+    "recall": 0.9285714285714286,
+    "roc_auc": 0.9696969696969697
+  },
+  "test_metrics_at_threshold": {
+    "accuracy": 0.8360655737704918,
+    "precision": 0.7368421052631579,
+    "recall": 1.0,
+    "roc_auc": 0.9696969696969697
+  },
+  "n_train": 242,
+  "n_test": 61,
+  "all_runs": [
+    {
+      "run": "logreg-C0.03",
+      "cv_roc_auc": 0.8882436404175534,
+      "cv_recall": 0.7106719367588932,
+      "test_roc_auc": 0.9642857142857143
+    },
+    {
+      "run": "logreg-C0.3",
+      "cv_roc_auc": 0.9038005472788081,
+      "cv_recall": 0.7830039525691699,
+      "test_roc_auc": 0.9696969696969697
+    },
+    {
+      "run": "logreg-C3.0",
+      "cv_roc_auc": 0.9021891152325935,
+      "cv_recall": 0.783399209486166,
+      "test_roc_auc": 0.9632034632034633
+    },
+    {
+      "run": "random_forest-max_depth3-min_samples_leaf1",
+      "cv_roc_auc": 0.8926370730718556,
+      "cv_recall": 0.7553359683794465,
+      "test_roc_auc": 0.9469696969696969
+    },
+    {
+      "run": "random_forest-max_depth3-min_samples_leaf4",
+      "cv_roc_auc": 0.8954190736799432,
+      "cv_recall": 0.7553359683794465,
+      "test_roc_auc": 0.9502164502164502
+    },
+    {
+      "run": "random_forest-max_depth6-min_samples_leaf1",
+      "cv_roc_auc": 0.8791071247592986,
+      "cv_recall": 0.7644268774703556,
+      "test_roc_auc": 0.949134199134199
+    },
+    {
+      "run": "random_forest-max_depth6-min_samples_leaf4",
+      "cv_roc_auc": 0.8937440176570611,
+      "cv_recall": 0.782608695652174,
+      "test_roc_auc": 0.9458874458874458
+    },
+    {
+      "run": "random_forest-max_depthNone-min_samples_leaf1",
+      "cv_roc_auc": 0.8764129590216546,
+      "cv_recall": 0.7826086956521738,
+      "test_roc_auc": 0.948051948051948
+    },
+    {
+      "run": "random_forest-max_depthNone-min_samples_leaf4",
+      "cv_roc_auc": 0.8937699176829612,
+      "cv_recall": 0.7735177865612648,
+      "test_roc_auc": 0.9469696969696969
+    }
+  ]
+}

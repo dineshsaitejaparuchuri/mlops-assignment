@@ -1,0 +1,25 @@
+#14 [stage-1 5/8] COPY src/ ./src/
+#14 DONE 0.1s
+
+#15 [stage-1 6/8] RUN test -f src/api.py || (echo "ERROR: src/api.py missing" >&2; exit 1)
+#15 DONE 0.1s
+
+#16 [stage-1 7/8] COPY models/model.joblib ./models/model.joblib
+#16 DONE 0.0s
+
+#17 [stage-1 8/8] RUN mkdir -p logs && chown -R app:app /app
+#17 DONE 0.1s
+
+#18 exporting to image
+#18 exporting layers
+#18 exporting layers 13.3s done
+#18 exporting manifest sha256:b6890c345636d576dbae3ffeeace46441f95e3d9212dabdb7c6eea16c50ee7ae done
+#18 exporting config sha256:642b877dbb3e781e7214d15e41f614c9ce55bd0f294b0bcc336930421a97a287 done
+#18 exporting attestation manifest sha256:a22b23983bec9c72cdbfa9845ae6ba67740cd3452055c605f5317fbaa6f88d17 done
+#18 exporting manifest list sha256:47b2aaf28f1566dab6e615545bc2385924d62449030d52f5c4854f6158385535 done
+#18 naming to docker.io/library/heart-disease-api:latest done
+#18 unpacking to docker.io/library/heart-disease-api:latest
+#18 unpacking to docker.io/library/heart-disease-api:latest 3.1s done
+#18 DONE 16.4s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/xluo87noj5m5jvtl2dlvhssie

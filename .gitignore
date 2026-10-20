@@ -1,0 +1,16 @@
+.venv/
+mlruns/
+mlartifacts/
+logs/
+__pycache__/
+.pytest_cache/
+*.pyc
+.DS_Store
+.ci-local/artifacts/
+# Build/test artifacts
+build/
+dist/
+*.egg-info/
+.coverage
+htmlcov/
+.ruff_cache/

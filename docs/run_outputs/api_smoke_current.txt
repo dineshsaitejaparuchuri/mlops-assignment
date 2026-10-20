@@ -1,0 +1,11 @@
+GET /health
+{"status":"ok","model_loaded":true}
+POST /predict
+{"prediction":1,"label":"heart disease","confidence":0.848,"probability_disease":0.848}
+GET /metrics
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 716.0
+python_gc_objects_collected_total{generation="1"} 10.0
+python_gc_objects_collected_total{generation="2"} 30.0
+smoke test passed

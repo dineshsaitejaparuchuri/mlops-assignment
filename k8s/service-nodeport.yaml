@@ -1,0 +1,17 @@
+# Alternative to ingress: kubectl apply -f k8s/service-nodeport.yaml
+# Reach it at http://<node-ip>:30080 (minikube: minikube service heart-api-nodeport -n heart-mlops --url)
+# On a cloud cluster, change type to LoadBalancer and remove nodePort.
+apiVersion: v1
+kind: Service
+metadata:
+  name: heart-api-nodeport
+  namespace: heart-mlops
+spec:
+  type: NodePort
+  selector:
+    app: heart-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      nodePort: 30080

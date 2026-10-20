@@ -1,0 +1,8 @@
+-r requirements.txt
+jupyter_core
+nbconvert
+nbformat
+ipykernel
+pypdf
+reportlab
+pillow

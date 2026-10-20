@@ -1,0 +1,78 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test-train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 pytest
+
+      - name: Prepare output dirs
+        run: mkdir -p ci-output logs models
+
+      - name: Lint
+        run: |
+          set -o pipefail
+          flake8 src test 2>&1 | tee ci-output/flake8.txt
+
+      - name: Unit tests
+        run: |
+          set -o pipefail
+          pytest test -v --junitxml=ci-output/pytest-junit.xml 2>&1 | tee ci-output/pytest.txt
+
+      - name: Train model
+        run: |
+          set -o pipefail
+          python -m src.train 2>&1 | tee ci-output/train.txt
+
+      - name: Verify model artifacts
+        run: |
+          test -f models/model.joblib
+          test -f models/metrics.json
+
+      - name: Summarize MLflow runs
+        run: |
+          find mlruns -maxdepth 3 -name meta.yaml | sort > ci-output/mlruns-summary.txt
+          du -sh mlruns >> ci-output/mlruns-summary.txt
+
+      - name: Build Docker image
+        run: docker build -t heart-disease-api:ci .
+
+      - name: Smoke test container
+        run: |
+          set -o pipefail
+          docker run -d --name heart-api -p 8000:8000 heart-disease-api:ci
+          scripts/smoke_test.sh http://localhost:8000 2>&1 | tee ci-output/smoke.txt
+
+      - name: Container logs
+        if: always()
+        run: docker logs heart-api > ci-output/container.log 2>&1 || true
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-artifacts
+          if-no-files-found: warn
+          path: |
+            models/model.joblib
+            models/metrics.json
+            logs/
+            ci-output/
+            mlruns/
