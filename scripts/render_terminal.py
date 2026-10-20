@@ -1,8 +1,9 @@
 """Render captured terminal text (docs/run_outputs/*) as PNG screenshots.
 
-The text is the real captured output; only the rendering to an image is synthetic.
+The text is the real captured output; rendering masks the machine-specific workspace
+path so screenshots do not publish a local username or download location.
     python scripts/render_terminal.py
-    python scripts/render_terminal.py --ci-ingress 8  # render the saved hosted Ingress artifact
+    python scripts/render_terminal.py --ci-ingress 9  # render the saved hosted Ingress artifact
 """
 import re
 import sys
@@ -25,14 +26,14 @@ PAD = 18
 
 def render(lines: list[str], title: str, dest: Path) -> None:
     lines = lines or ["No lint issues."]
+    workspace = str(ROOT)
+    lines = [line.replace(workspace, "<workspace>") for line in lines]
     width = max(len(line) for line in lines) * 10 + 2 * PAD
     height = len(lines) * LINE_H + 2 * PAD + 34
     img = Image.new("RGB", (max(width, 760), height), "#1e1e1e")
     d = ImageDraw.Draw(img)
-    d.rectangle([0, 0, img.width, 30], fill="#3a3a3a")
-    for i, c in enumerate(("#ff5f56", "#ffbd2e", "#27c93f")):
-        d.ellipse([12 + i * 22, 9, 24 + i * 22, 21], fill=c)
-    d.text((100, 6), title, font=FONT, fill="#cccccc")
+    d.rectangle([0, 0, img.width, 30], fill="#30363d")
+    d.text((PAD, 6), title, font=FONT, fill="#e6edf3")
     y = 30 + PAD
     for line in lines:
         color = "#ffffff"
@@ -78,12 +79,6 @@ def main() -> None:
            OUT / "k8s_pods_services.png")
     render(tail_lines("k8s_smoke.txt"), "terminal - smoke test via port-forward (captured output)",
            OUT / "k8s_smoke_test.png")
-    ci = [ln for ln in tail_lines("act_ci_full.txt")
-          if re.search(r"(✅|❌|🏁|passed|smoke test)", ln) and "unable to get git" not in ln
-          and "Pre " not in ln and "Post " not in ln and "dest=" not in ln]
-    ci = [ln.replace("[ci/build-test-train]", "").replace("✅", "[ok]").replace("❌", "[FAIL]").replace("🏁", "[done]").replace("  |", " |").strip() for ln in ci]
-    render(["$ scripts/run_ci_local.sh   # act runs .github/workflows/ci.yml"] + ci,
-           "local run of the CI workflow (act, captured output)", OUT / "ci_run.png")
 
 
 if __name__ == "__main__":

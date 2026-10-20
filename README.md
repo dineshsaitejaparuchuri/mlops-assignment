@@ -105,4 +105,4 @@ mlflow ui --port 5000
 
 ## Verification and remaining submission steps
 
-The repository includes local run evidence and hosted CI evidence. GitHub Actions run [#8](https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400092919) passed lint, tests, training, Docker build and smoke tests, and the Kubernetes Ingress route check in a temporary cluster. The course portal upload and video recording are external steps that I still need to complete. I will review and be prepared to explain and personalize the work in line with the course's academic-integrity requirements.
+The repository includes local run evidence and hosted CI evidence. GitHub Actions run [#9](https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400608617) passed lint, tests, training, Docker build and smoke tests, and the Kubernetes Ingress route check in a temporary cluster. The course portal upload and video recording are external steps that I still need to complete. I will review and be prepared to explain and personalize the work in line with the course's academic-integrity requirements.

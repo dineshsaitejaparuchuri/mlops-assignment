@@ -340,7 +340,7 @@ s += bullets(toc)
 s += [Spacer(1, 1 * cm),
       P("<b>Scope and verification.</b> The results and screenshots in this report come from the project artifacts and captured runs. "
         "Docker, a local Kubernetes cluster, Prometheus and Grafana were exercised locally. "
-        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400092919' color='#1464a5'>#8</link> passed lint, tests, training, Docker smoke checks, and the disposable kind Ingress test. "
+        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400608617' color='#1464a5'>#9</link> passed lint, tests, training, Docker smoke checks, and the disposable kind Ingress test. "
         "The local MLflow run store is generated during training and is not included in the source archive, so the report builder "
         "can also read the committed experiment summary on a clean checkout.",
         BODY), PageBreak()]
@@ -551,7 +551,7 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
              ["8", "Smoke test container", "scripts/smoke_test.sh: /health, /predict, /metrics"],
              ["9", "Container logs", "always(): docker logs -> ci-output/container.log"],
              ["10", "Upload artifacts", "always(): model, metrics, logs/, ci-output/, mlruns/"],
-             ["Separate job", "Kubernetes Ingress", "disposable kind cluster; route smoke checks via heart.local"]],
+             ["CI", "Kubernetes Ingress", "separate disposable kind cluster; route smoke checks via heart.local"]],
             [0.8 * cm, 4.4 * cm, W - 5.2 * cm]),
       Spacer(1, 6),
       P("Retraining in CI is intended to catch changes that break the training process, saved-model contract or container before a change is merged. Each workflow run also uploads logs, JUnit output, the model and the MLflow run store for inspection. The GitHub Actions workflow additionally creates a disposable kind cluster, installs the project manifests and tests the API through the Ingress host route. That cluster is deleted at the end of the job; it is not a persistent deployment."),
@@ -561,16 +561,16 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
         "executes the prior workflow with <font face='Courier'>act</font> and local stubs for GitHub-only actions; "
         "The saved act transcript is historical and records an earlier 18-test suite. The current local run passes 23 tests, "
         "and the revised workflow runs lint, tests, training, Docker build/smoke checks, and a disposable kind Ingress smoke test. "
-        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400092919' color='#1464a5'>#8 passed</link>; its Ingress artifact is saved with this report. "
-        "The saved act transcript is historical and records an earlier 18-test suite. Local act transcript: docs/run_outputs/act_ci_full.txt."),
+        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400608617' color='#1464a5'>#9 passed</link>; its Ingress artifact is saved with this report. "
+        "Local act transcript: docs/run_outputs/act_ci_full.txt."),
       img(SHOTS / "ci_ingress_verification.png", width=10.5 * cm, max_h=4 * cm,
-          caption="Figure 11 - GitHub Actions run #8 Ingress route and API smoke test, rendered locally from the uploaded workflow artifact"),
+          caption="Figure 11 - GitHub Actions run #9 Ingress route and API smoke test, rendered locally from the uploaded workflow artifact"),
       PageBreak()]
 
 # ---------------------------------------------------------------- 7 docker
 s += [P("7. Containerisation", H1),
       P("The <font face='Courier'>Dockerfile</font> is multi-stage: a builder stage creates a "
-        "virtualenv and installs <font face='Courier'>requirements.txt</font>; the runtime stage "
+        "virtualenv and installs <font face='Courier'>requirements-serve.txt</font>; the runtime stage "
         "(python:3.11-slim) copies only the venv, <font face='Courier'>src/</font> and "
         "<font face='Courier'>models/model.joblib</font>, so the image ships no training data or "
         "MLflow store. It runs as a non-root user (uid 10001), exposes port 8000, defines a "
@@ -632,7 +632,7 @@ scripts/smoke_test.sh http://localhost:8000
         "<i>up</i>, and the Grafana dashboard loaded with data. In addition, the GitHub Actions workflow "
         "tests the Ingress route in a disposable kind cluster using cloud-provider-kind. In the local Windows cluster "
         "the Ingress object is applied but has no address; local API access is verified through port-forward. "
-        "The hosted CI workflow is configured to check Ingress behavior in a disposable cluster; no persistent public service is deployed."),
+        "GitHub Actions run #9 passed the Ingress check in a disposable cluster; no persistent public service is deployed."),
       img(SHOTS / "k8s_pods_services.png", width=W, max_h=5 * cm, caption="Figure 14 - kubectl get pods,svc "
           "(real captured text)"),
       img(SHOTS / "k8s_smoke_test.png", width=W, max_h=5 * cm, caption="Figure 15 - smoke test served by "
@@ -675,7 +675,7 @@ s += [P("9. Results and limitations", H1),
                 "<b>Precision trade-off.</b> The 0.26 threshold maximises recall and therefore "
                 "produces more false positives.",
                 "<b>Deployment verification.</b> Local Docker and kind deployment evidence is included. "
-                "GitHub Actions run #8 passed the Ingress routing check in a disposable CI cluster. "
+                "GitHub Actions run #9 passed the Ingress routing check in a disposable CI cluster. "
                 "No persistent public API endpoint is deployed.",
                 "<b>Monitoring scope.</b> Operational metrics only: no data-drift or "
                 "prediction-distribution monitoring and no automated retraining trigger. "
@@ -709,7 +709,7 @@ s += [P("10. Repository and deliverables map", H1),
             [5.4 * cm, W - 5.4 * cm]),
       Spacer(1, 6),
       P("11. Evidence screenshots", H1),
-      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, plus captured test, lint, Docker, Kubernetes and local-CI output. Browser images were captured from local services; terminal images were rendered from saved command output. Hosted CI status is available in the repository Actions tab. The Ingress route is configured for testing in an ephemeral cluster; this does not provide a public endpoint.", BODY)]
+      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, plus captured test, lint, Docker, Kubernetes and local-CI output. Browser images were captured from local services; terminal images were rendered from saved command output. GitHub Actions run #9 verified the Ingress route in an ephemeral cluster; this does not provide a public endpoint.", BODY)]
 
 first = True
 for i, f in enumerate(s):
