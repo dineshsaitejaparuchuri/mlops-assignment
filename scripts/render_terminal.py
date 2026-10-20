@@ -2,15 +2,23 @@
 
 The text is the real captured output; only the rendering to an image is synthetic.
     python scripts/render_terminal.py
+    python scripts/render_terminal.py --ci-ingress  # render the saved hosted Ingress artifact
 """
 import re
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "screenshots"
-FONT = ImageFont.truetype("/System/Library/Fonts/Menlo.ttc", 16)
+FONT_CANDIDATES = [
+    Path(r"C:\Windows\Fonts\consola.ttf"),
+    Path("/System/Library/Fonts/Menlo.ttc"),
+    Path("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"),
+]
+FONT = next((ImageFont.truetype(str(path), 16) for path in FONT_CANDIDATES
+             if path.exists()), ImageFont.load_default())
 LINE_H = 22
 PAD = 18
 
@@ -41,6 +49,14 @@ def render(lines: list[str], title: str, dest: Path) -> None:
 
 def main() -> None:
     ro = ROOT / "docs" / "run_outputs"
+    if sys.argv[1:] == ["--ci-ingress"]:
+        status = (ro / "ci_run4_ingress_status.txt").read_text().splitlines()
+        smoke = (ro / "ci_run4_ingress_smoke.txt").read_text().splitlines()
+        lines = [*status, "", *smoke]
+        render(lines, "GitHub Actions run #4 - Ingress verification (captured output)",
+               OUT / "ci_ingress_verification.png")
+        return
+
     pt = (ro / "pytest_verbose.txt").read_text().splitlines()
     pt = [ln for ln in pt if not ln.startswith(("cachedir", "rootdir", "plugins"))]
     render(pt, "terminal - pytest (captured output)", OUT / "terminal_pytest.png")

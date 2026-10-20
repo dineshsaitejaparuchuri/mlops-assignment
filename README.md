@@ -7,7 +7,8 @@ The model is an educational demonstration, not a medical device. Its scores shou
 ## Project status
 
 - The project code, report, screenshots, notebooks, deployment manifests, and local run logs are included in this package.
-- A fresh local validation run passed all 18 unit tests, compiled the Python source/scripts, parsed all 16 YAML files, and passed a live FastAPI smoke test for `/health`, `/predict`, and `/metrics`. The current environment did not have Flake8 installed, so the hosted workflow will be the next fresh lint run.
+- A saved local validation run passed all 18 unit tests, compiled the Python source/scripts, parsed all 16 YAML files, and passed a live FastAPI smoke test for `/health`, `/predict`, and `/metrics`; its outputs are under `docs/run_outputs/`.
+- Hosted Actions run [#5](https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39388438324) passed clean dependency installation, lint, all 18 tests, model training, Docker build and smoke test, Kubernetes deployment, and Ingress verification.
 - The GitHub-hosted CI workflow passed at commit `1978afe` (run [#4](https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39387758630)), including an end-to-end Kubernetes Ingress check in a disposable kind cluster using `cloud-provider-kind`.
 - The project has no persistent public API URL. Local kind deployment and port-forward evidence are included, and hosted CI verified `/health`, `/predict`, and `/metrics` through the Ingress route in its temporary cluster.
 - The assignment video is intentionally left for the student to record.

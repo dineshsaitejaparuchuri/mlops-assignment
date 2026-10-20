@@ -343,8 +343,8 @@ s += bullets(toc)
 s += [Spacer(1, 1 * cm),
       P("<b>Scope and verification.</b> The results and screenshots in this report come from the project artifacts and captured runs. "
         "Docker, a local Kubernetes cluster, Prometheus and Grafana were exercised locally. "
-        "GitHub Actions run #3 passed the existing pipeline; the current workflow adds a disposable kind cluster "
-        "and routed Ingress smoke test, whose result is recorded in the repository Actions run. "
+        "GitHub Actions run #4 passed the full pipeline, including a disposable kind cluster and routed Ingress smoke test. "
+        "Run #5 repeated the workflow successfully on a subsequent documentation-only commit. "
         "The local MLflow run store is generated during training and is not included in the source archive, so the report builder "
         "can also read the committed experiment summary on a clean checkout.",
         BODY), PageBreak()]
@@ -377,7 +377,7 @@ pytest test -v && flake8 src test
              ["notebooks/", "01_eda, 02_training, 03_inference - executed, outputs saved"],
              ["Dockerfile, docker-compose.yml", "multi-stage image; compose adds Prometheus + Grafana"],
              ["k8s/, monitoring/", "Kubernetes manifests, Prometheus config, Grafana dashboard"],
-             [".github/workflows/ci.yml", "lint, test, train, build image, smoke test, artifacts"],
+             [".github/workflows/ci.yml", "lint, test, train, Docker smoke test, kind Ingress smoke test, artifacts"],
              ["docs/", "experiment record, run outputs, this report, demo script"]],
             [5.2 * cm, W - 5.2 * cm]),
       Spacer(1, 6),
@@ -561,10 +561,11 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
       P("<b>Local and hosted CI evidence.</b> <font face='Courier'>scripts/run_ci_local.sh</font> "
         "executes the prior workflow with <font face='Courier'>act</font> and local stubs for GitHub-only actions; "
         "its captured run passed 18 tests, lint, training, Docker build and container smoke tests. "
-        "GitHub Actions run #3 also passed those hosted steps. The updated workflow's kind Ingress test "
-        "passed in run #4. Local log: docs/run_outputs/act_ci_full.txt."),
-      img(SHOTS / "ci_run.png", width=10.5 * cm, caption="Figure 11 - local run of the CI workflow "
-          "(act; real captured output, rendered to PNG)"),
+        "GitHub Actions run #4 passed all hosted steps, including the kind Ingress check; run #5 repeated "
+        "the full workflow successfully on a subsequent documentation-only commit. Local act log: docs/run_outputs/act_ci_full.txt."),
+      img(SHOTS / "ci_ingress_verification.png", width=10.5 * cm, max_h=4 * cm,
+          caption="Figure 11 - GitHub Actions run #4 Ingress route and API smoke-test output; "
+          "actual workflow artifact rendered locally"),
       PageBreak()]
 
 # ---------------------------------------------------------------- 7 docker
@@ -631,7 +632,8 @@ scripts/smoke_test.sh http://localhost:8000
         "<font face='Courier'>kubectl port-forward</font>; Prometheus showed both heart-api pods as "
         "<i>up</i>, and the Grafana dashboard loaded with data. In addition, the GitHub Actions workflow "
         "tests the Ingress route in a disposable kind cluster using cloud-provider-kind. This confirms "
-        "routing for the CI environment only; no persistent public service is deployed."),
+        "routing for the CI environment only; no persistent public service is deployed. The older local screenshot below "
+        "shows the port-forward run before that provider was added."),
       img(SHOTS / "k8s_pods_services.png", width=W, max_h=5 * cm, caption="Figure 14 - kubectl get pods,svc "
           "(real captured text)"),
       img(SHOTS / "k8s_smoke_test.png", width=W, max_h=5 * cm, caption="Figure 15 - smoke test served by "
@@ -674,7 +676,7 @@ s += [P("9. Results and limitations", H1),
                 "<b>Precision trade-off.</b> The 0.26 threshold maximises recall and therefore "
                 "produces more false positives.",
                 "<b>Deployment verification.</b> Local Docker and kind deployment evidence is included. "
-                "GitHub Actions run #3 passed the application pipeline; the updated workflow tests Ingress "
+                "GitHub Actions runs #4 and #5 passed the full application pipeline and verified Ingress "
                 "routing in a disposable CI cluster. No persistent public API endpoint is deployed.",
                 "<b>Monitoring scope.</b> Operational metrics only: no data-drift or "
                 "prediction-distribution monitoring and no automated retraining trigger. "
