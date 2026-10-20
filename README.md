@@ -16,7 +16,7 @@ python -m src.download_data
 
 ## Setup and quick start
 
-I use Python 3.11. These commands work in a POSIX shell on Linux/macOS:
+The CI workflow and Docker image use Python 3.11. Local Windows verification was run with Python 3.12.10. These commands work in a POSIX shell on Linux/macOS:
 
 ```bash
 python3.11 -m venv .venv
@@ -33,12 +33,11 @@ On Windows PowerShell, create and activate the environment with `py -3.11 -m ven
 
 Open `http://localhost:8000/docs` to try the API. `GET /health`, `POST /predict`, and `GET /metrics` are also available. The response includes the predicted class, label, `probability_predicted_class`, and `probability_disease`. The tuned 0.26 threshold favors recall, so the predicted class may be disease even when its class probability is below 0.5; `probability_predicted_class` names this value without implying a 0.5 cutoff.
 
-For notebook and PDF regeneration, install the optional dependencies:
+For notebook execution, install the optional dependencies:
 
 ```bash
 pip install -r requirements-notebooks.txt
 python scripts/build_notebooks.py
-python scripts/build_report.py
 ```
 
 ## Model and results
