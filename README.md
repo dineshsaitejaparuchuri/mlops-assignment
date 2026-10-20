@@ -92,7 +92,6 @@ Then use `http://localhost:8000/docs` for the API, `http://localhost:9090` for P
 - `src/predict.py`: standalone JSON-file inference using the committed model.
 - `requirements-serve.txt`: minimal pinned dependencies for the container.
 - `docs/EVIDENCE_NOTES.md`: screenshot provenance and evidence limitations.
-- `docs/demo_video_script.md`: outline for the video; the video itself is not included.
 
 ## Experiment tracking
 
@@ -103,6 +102,6 @@ export MLFLOW_ALLOW_FILE_STORE=true  # PowerShell: $env:MLFLOW_ALLOW_FILE_STORE 
 mlflow ui --port 5000
 ```
 
-## Verification and remaining submission steps
 
-The repository includes local run evidence and hosted CI evidence. GitHub Actions run [#10](https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39402219483) passed lint, tests, training, Docker build and smoke tests, and the Kubernetes Ingress route check in a temporary cluster. The course portal upload and video recording are external steps that I still need to complete. I will review and be prepared to explain and personalize the work in line with the course's academic-integrity requirements.
+
+The Screenshots are partly on macos UI and windows because my macos went into repair mode and had some issues with it. so I resumed the work on windows
