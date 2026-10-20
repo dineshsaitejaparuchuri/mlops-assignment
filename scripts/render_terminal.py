@@ -54,7 +54,7 @@ def main() -> None:
     if len(sys.argv) == 3 and sys.argv[1] == "--ci-ingress":
         status = (ro / "ci_ingress_status.txt").read_text(encoding="utf-8", errors="replace").splitlines()
         smoke = (ro / "ci_ingress_smoke.txt").read_text(encoding="utf-8", errors="replace").splitlines()
-        render([*status, "", *smoke], f"GitHub Actions run #{sys.argv[2]} - Ingress verification (captured artifact)",
+        render([*status, "", *smoke], f"Hosted CI artifact (run #{sys.argv[2]}) - Ingress verification (rendered locally)",
                OUT / "ci_ingress_verification.png")
         return
 

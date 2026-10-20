@@ -13,7 +13,6 @@ I used this checklist to locate evidence for each requirement in the assignment 
 | Production deployment | 7 | `k8s/`, `scripts/deploy_local.sh`, `scripts/test_kind_ingress.sh`, `screenshots/k8s_*.png`, `screenshots/ci_ingress_verification.png` | Local screenshots document kind deployment and port-forward access. Hosted run #10 verified the temporary Ingress route. Neither constitutes a persistent public endpoint. |
 | Monitoring and logging | 3 | `src/api.py`, `monitoring/`, `k8s/monitoring/`, `screenshots/api_metrics.png`, `screenshots/prometheus_targets.png`, `screenshots/grafana_dashboard.png` | The API emits request logs and Prometheus metrics; Grafana and Prometheus configuration and screenshots are included. |
 | Documentation and reporting | 2 | `README.md`, `docs/report/MLOps_Assignment1_Report.pdf`, `docs/report/architecture.png`, `screenshots/` | The report is 10 pages and includes setup, results, architecture, screenshots, and repository details. |
-| Video recording | Deliverable | `docs/demo_video_script.md` | The script is included; I still need to record and submit the video. |
 
 ## Point-by-point crosswalk against the assignment PDF
 
@@ -36,14 +35,10 @@ I used this checklist to locate evidence for each requirement in the assignment 
 | Include code, Dockerfile, requirements, cleaned data, notebooks, tests, workflow, manifests, and screenshots. | Repository root plus `src/`, `data/`, `notebooks/`, `test/`, `.github/`, `k8s/`, `screenshots/` | The referenced project files are included in the repository. |
 | Provide a public API URL if deployed publicly, otherwise local access instructions. | `README.md`, `scripts/deploy_local.sh`, report Section 10 | No persistent public endpoint is configured. The README gives local port-forward commands for the API and monitoring UIs. |
 | Provide clean setup from requirements, isolated Docker proof, failure propagation, and clear logs. | `requirements.txt`, `Dockerfile`, `.github/workflows/ci.yml`, uploaded CI artifacts | Hosted run #10 passed and uploaded artifacts/logs. |
-| Submit a short pipeline video. | `docs/demo_video_script.md` | I still need to record and submit this deliverable. |
-
-The assignment PDF includes an academic-integrity requirement. I will review and personalize the work and be prepared to explain the implementation and results.
 
 ## Remaining submission actions
 
-1. Record the video using `docs/demo_video_script.md` as a guide.
-2. Upload the project and report through the course submission page.
-3. Review the work and make sure I can explain the implementation and reported results.
+1. Upload the project and report through the course submission page.
+2. Review the work and make sure I can explain the implementation and reported results.
 
 The code and documentation are pushed to the GitHub repository. The hosted Ingress evidence is from a temporary CI cluster; the local instructions use port-forwarding and make no claim of a local Ingress route.

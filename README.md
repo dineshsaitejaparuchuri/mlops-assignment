@@ -103,5 +103,4 @@ mlflow ui --port 5000
 ```
 
 
-
-The Screenshots are partly on macos UI and windows because my macos went into repair mode and had some issues with it. so I resumed the work on windows
+The repository includes local run evidence and hosted CI evidence. Terminal PNGs are renderings of saved command output, not desktop terminal screenshots. The GitHub Actions run-summary image is an actual browser capture; the linked run [#10](https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39402219483) passed lint, tests, training, Docker build and smoke tests, and the Kubernetes Ingress route check in a temporary cluster. The course portal upload remains an external step.

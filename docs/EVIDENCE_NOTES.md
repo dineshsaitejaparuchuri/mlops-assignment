@@ -9,11 +9,11 @@ The browser screenshots were captured from the local services; terminal images w
 | `docker_build_run.png`, `docs/run_outputs/docker_build.txt`, `docs/run_outputs/docker_run.txt` | Docker build/run and API smoke test | Refreshed against image version 1.0.0; container runs as non-root and reports healthy. |
 | `k8s_pods_services.png`, `k8s_smoke_test.png`, `docs/run_outputs/k8s_*.txt` | Local Kubernetes resources and API checks | Refreshed; API and monitoring pods are running and port-forward smoke checks pass. Local Ingress routing remains unverified. |
 | `grafana_dashboard.png`, `prometheus_targets.png` | Monitoring dashboard and Prometheus scrape targets | Captured from local services; API targets are up. |
-| `ci_ingress_verification.png`, `docs/run_outputs/ci_ingress_*.txt` | Hosted Ingress address and `/health`, `/predict`, `/metrics` smoke test | Rendered locally from the actual artifact for successful Actions run #10: https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39402219483. |
+| `ci_ingress_verification.png`, `docs/run_outputs/ci_ingress_*.txt` | Hosted Ingress address and `/health`, `/predict`, `/metrics` smoke test | The PNG is a locally rendered view of the downloaded workflow artifact, not a browser screenshot. The raw artifact logs and successful Actions run #10 are linked here: https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39402219483. |
+| `github_actions_run.jpg` | Hosted Actions run summary | Actual browser capture of run #10 showing success, both successful jobs, and two uploaded artifacts. The browser is signed out, so job-level step output is evidenced by the linked workflow artifact logs, not this screenshot. |
 | GitHub Actions run #10 | CI lint, tests, training, Docker, and disposable kind Ingress checks | All jobs passed in the run; artifacts were uploaded. |
 
 ## Remaining actions
 
 - Submit the repository and report through the course portal; that external account is not available in this workspace.
 - The project has no persistent public API endpoint. The hosted Ingress check runs in an ephemeral CI cluster.
-- Record and submit the video separately; video creation is intentionally excluded from this work.

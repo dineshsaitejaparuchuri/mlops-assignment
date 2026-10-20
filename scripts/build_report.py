@@ -374,7 +374,7 @@ pytest test -v && flake8 src test scripts
              ["Dockerfile, docker-compose.yml", "multi-stage image; compose adds Prometheus + Grafana"],
              ["k8s/, monitoring/", "Kubernetes manifests, Prometheus config, Grafana dashboard"],
              [".github/workflows/ci.yml", "lint, test, train, Docker smoke test, kind Ingress smoke test, artifacts"],
-             ["docs/", "experiment record, run outputs, this report, demo script"]],
+             ["docs/", "experiment record, run outputs, and this report"]],
             [5.2 * cm, W - 5.2 * cm]),
       Spacer(1, 6),
       P("Notebooks are regenerated and executed with <font face='Courier'>python "
@@ -562,8 +562,8 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
         "and the revised workflow runs lint, tests, training, Docker build/smoke checks, and a disposable kind Ingress smoke test. "
         "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39402219483' color='#1464a5'>#10 passed</link>; its Ingress artifact is saved with this report. "
         "The uploaded workflow artifacts provide the current hosted logs and test results."),
-      img(SHOTS / "ci_ingress_verification.png", width=10.5 * cm, max_h=4 * cm,
-          caption="Figure 11 - GitHub Actions run #10 Ingress route and API smoke test, rendered locally from the uploaded workflow artifact"),
+      img(SHOTS / "github_actions_run.jpg", width=7.2 * cm, max_h=4.5 * cm,
+          caption="Figure 11 - GitHub Actions run summary captured in the browser (successful run #10; detailed step logs are in the workflow artifacts)"),
       PageBreak()]
 
 # ---------------------------------------------------------------- 7 docker
@@ -588,8 +588,7 @@ docker compose up --build                        # API + Prometheus :9090 + Graf
         "<font face='Courier'>models/model.joblib</font> is present in the image, "
         "/health and /predict returned 200 and an invalid body returned 422. Output: "
         "docs/run_outputs/docker_run.txt."),
-      img(SHOTS / "docker_build_run.png", width=W, max_h=5 * cm, caption="Figure 12 - docker run, "
-          "health status, non-root user, smoke test and a 422 (real captured text)"),
+      img(SHOTS / "docker_build_run.png", width=W, max_h=5 * cm, caption="Figure 12 - Docker smoke-test transcript rendered from saved command output (docs/run_outputs/docker_run.txt)"),
       PageBreak()]
 
 # ---------------------------------------------------------------- 8 k8s
@@ -632,10 +631,9 @@ scripts/smoke_test.sh http://localhost:8000
         "tests the Ingress route in a disposable kind cluster using cloud-provider-kind. In the local Windows cluster "
         "the Ingress object is applied but has no address; local API access is verified through port-forward. "
         "GitHub Actions run #10 passed the Ingress check in a disposable cluster; no persistent public service is deployed."),
-      img(SHOTS / "k8s_pods_services.png", width=W, max_h=5 * cm, caption="Figure 14 - kubectl get pods,svc "
-          "(real captured text)"),
+      img(SHOTS / "k8s_pods_services.png", width=W, max_h=5 * cm, caption="Figure 14 - kubectl resource transcript rendered from saved command output (docs/run_outputs/k8s_pods.txt)"),
       img(SHOTS / "k8s_smoke_test.png", width=W, max_h=5 * cm, caption="Figure 15 - smoke test served by "
-          "the pods through port-forward (real captured text)"),
+          "the pods through port-forward; transcript rendered from saved command output (docs/run_outputs/k8s_smoke.txt)"),
       img(SHOTS / "prometheus_targets.png", width=W, max_h=5 * cm, caption="Figure 16 - Prometheus targets "
           "page (real browser screenshot)"),
       img(SHOTS / "grafana_dashboard.png", width=W, max_h=7 * cm, caption="Figure 17 - Grafana "
@@ -652,6 +650,8 @@ s += [P("9. Results and limitations", H1),
                 f"{t5['precision']:.3f}, recall {t5['recall']:.3f}, ROC-AUC {t5['roc_auc']:.3f}.",
                 f"At the recall-oriented threshold {thr}: accuracy {tt['accuracy']:.3f}, precision "
                 f"{tt['precision']:.3f}, recall {tt['recall']:.3f}.",
+                "The nine candidate configurations were ranked by training-only cross-validation; "
+                "held-out test metrics were recorded descriptively and were not used to select a model.",
                 f"Random forests reached CV ROC-AUC {runs[runs.run.str.startswith('random')].cv_roc_auc.min():.3f}"
                 f"-{runs[runs.run.str.startswith('random')].cv_roc_auc.max():.3f}; none beat logistic "
                 "regression.",
@@ -665,14 +665,20 @@ s += [P("9. Results and limitations", H1),
       *bullets(["<b>Small data.</b> 303 patients (61 test rows): one patient moves a metric by "
                 "~1.6 points, and CV standard deviations (up to 0.037) exceed many gaps between "
                 "configurations. Treat the ranking of close runs as noise.",
-                "<b>Single hold-out split.</b> The threshold and model were chosen with "
-                "training-only data, but a single split cannot quantify variance; repeated "
-                "CV or an external cohort would be stronger.",
+                "<b>Model selection and hold-out.</b> Nine configurations were compared on the same "
+                "five folds used to report the winning CV score, so that score may be optimistic "
+                "after selection. Held-out metrics for all candidates are descriptive only and "
+                "were not used for model selection. The model and threshold were selected from "
+                "training-only data, but one split cannot quantify variance; nested or repeated "
+                "CV, followed by an external cohort, would give stronger evidence.",
                 "<b>Population shift.</b> The Cleveland cohort is one hospital from the 1980s; "
                 "calibration and performance on other populations are unknown. This is a teaching "
                 "project and not a medical device.",
-                "<b>Precision trade-off.</b> The 0.26 threshold maximises recall and therefore "
-                "produces more false positives.",
+                f"<b>Precision trade-off.</b> Threshold {thr} was selected as the highest 0.01-grid "
+                f"value meeting the {metrics['target_recall']:.0%} recall target on out-of-fold "
+                f"training predictions. It produced {tt['recall']:.1%} recall on this test split "
+                f"and lower precision ({tt['precision']:.3f}) than threshold 0.5 "
+                f"({t5['precision']:.3f}); this single test result does not establish real-world recall.",
                 "<b>Deployment verification.</b> Local Docker and kind deployment evidence is included. "
                 "GitHub Actions run #10 passed the Ingress routing check in a disposable CI cluster. "
                 "No persistent public API endpoint is deployed.",
@@ -703,12 +709,11 @@ s += [P("10. Repository and deliverables map", H1),
              ["Kubernetes", "k8s/, scripts/deploy_local.sh, Section 8"],
              ["Monitoring and logging", "src/api.py, monitoring/, k8s/monitoring/, Section 8"],
              ["Inference notebook", "notebooks/03_inference.ipynb"],
-             ["Written report", "docs/report/ (this PDF)"],
-             ["Demo video outline", "docs/demo_video_script.md (recording not included in this package)"]],
+             ["Written report", "docs/report/ (this PDF)"]],
             [5.4 * cm, W - 5.4 * cm]),
       Spacer(1, 6),
       P("11. Evidence screenshots", H1),
-      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, plus captured test, lint, Docker, Kubernetes and local-CI output. Browser images were captured from local services; terminal images were rendered from saved command output. GitHub Actions run #10 verified the Ingress route in an ephemeral cluster; this does not provide a public endpoint.", BODY)]
+      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, an actual GitHub Actions run-summary browser capture, and rendered test, lint, Docker, Kubernetes and local-CI transcripts. Terminal PNGs are renderings of saved command output, not screenshots of a terminal window. GitHub Actions run #10 verified the Ingress route in an ephemeral cluster; this does not provide a public endpoint.", BODY)]
 
 first = True
 for i, f in enumerate(s):
