@@ -2,9 +2,10 @@
 
 The text is the real captured output; only the rendering to an image is synthetic.
     python scripts/render_terminal.py
-    python scripts/render_terminal.py --ci-ingress  # render the saved hosted Ingress artifact
+    python scripts/render_terminal.py --ci-ingress 8  # render the saved hosted Ingress artifact
 """
 import re
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -49,6 +50,13 @@ def render(lines: list[str], title: str, dest: Path) -> None:
 
 def main() -> None:
     ro = ROOT / "docs" / "run_outputs"
+    if len(sys.argv) == 3 and sys.argv[1] == "--ci-ingress":
+        status = (ro / "ci_ingress_status.txt").read_text(encoding="utf-8", errors="replace").splitlines()
+        smoke = (ro / "ci_ingress_smoke.txt").read_text(encoding="utf-8", errors="replace").splitlines()
+        render([*status, "", *smoke], f"GitHub Actions run #{sys.argv[2]} - Ingress verification (captured artifact)",
+               OUT / "ci_ingress_verification.png")
+        return
+
     pt = (ro / "pytest_verbose.txt").read_text(encoding="utf-8", errors="replace").splitlines()
     pt = [ln for ln in pt if not ln.startswith(("cachedir", "rootdir", "plugins"))]
     render(pt, "terminal - pytest (captured output)", OUT / "terminal_pytest.png")

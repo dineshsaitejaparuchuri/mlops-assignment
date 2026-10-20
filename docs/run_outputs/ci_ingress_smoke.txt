@@ -1,0 +1,7 @@
+GET /health
+{"status":"ok","model_loaded":true}
+POST /predict
+{"prediction":1,"label":"heart disease","probability_predicted_class":0.848,"probability_disease":0.848}
+GET /metrics
+metrics endpoint OK
+smoke test passed

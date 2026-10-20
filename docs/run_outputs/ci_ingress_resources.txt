@@ -1,0 +1,6 @@
+NAME                             READY   STATUS    RESTARTS   AGE   IP           NODE                     NOMINATED NODE   READINESS GATES
+pod/heart-api-69c8bdb974-lvfgm   1/1     Running   0          8s    10.244.0.5   heart-ci-control-plane   <none>           <none>
+pod/heart-api-69c8bdb974-trw76   1/1     Running   0          8s    10.244.0.6   heart-ci-control-plane   <none>           <none>
+
+NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+service/heart-api   ClusterIP   10.96.222.216   <none>        80/TCP    8s    app=heart-api

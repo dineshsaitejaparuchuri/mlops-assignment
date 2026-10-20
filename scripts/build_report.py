@@ -340,7 +340,7 @@ s += bullets(toc)
 s += [Spacer(1, 1 * cm),
       P("<b>Scope and verification.</b> The results and screenshots in this report come from the project artifacts and captured runs. "
         "Docker, a local Kubernetes cluster, Prometheus and Grafana were exercised locally. "
-        "The revised GitHub Actions workflow is configured for lint, tests, training, Docker smoke checks, and a disposable kind Ingress test. "
+        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400092919' color='#1464a5'>#8</link> passed lint, tests, training, Docker smoke checks, and the disposable kind Ingress test. "
         "The local MLflow run store is generated during training and is not included in the source archive, so the report builder "
         "can also read the committed experiment summary on a clean checkout.",
         BODY), PageBreak()]
@@ -560,9 +560,11 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
       P("<b>Local and hosted CI evidence.</b> <font face='Courier'>scripts/run_ci_local.sh</font> "
         "executes the prior workflow with <font face='Courier'>act</font> and local stubs for GitHub-only actions; "
         "The saved act transcript is historical and records an earlier 18-test suite. The current local run passes 23 tests, "
-        "and the revised workflow is configured for lint, tests, training, Docker build/smoke checks, and a disposable kind Ingress smoke test. "
-        "The saved act transcript is historical and records an earlier 18-test suite. "
-        "Local act transcript: docs/run_outputs/act_ci_full.txt. The final hosted run is checked after this revision is pushed."),
+        "and the revised workflow runs lint, tests, training, Docker build/smoke checks, and a disposable kind Ingress smoke test. "
+        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400092919' color='#1464a5'>#8 passed</link>; its Ingress artifact is saved with this report. "
+        "The saved act transcript is historical and records an earlier 18-test suite. Local act transcript: docs/run_outputs/act_ci_full.txt."),
+      img(SHOTS / "ci_ingress_verification.png", width=10.5 * cm, max_h=4 * cm,
+          caption="Figure 11 - GitHub Actions run #8 Ingress route and API smoke test, rendered locally from the uploaded workflow artifact"),
       PageBreak()]
 
 # ---------------------------------------------------------------- 7 docker
@@ -673,7 +675,7 @@ s += [P("9. Results and limitations", H1),
                 "<b>Precision trade-off.</b> The 0.26 threshold maximises recall and therefore "
                 "produces more false positives.",
                 "<b>Deployment verification.</b> Local Docker and kind deployment evidence is included. "
-                "The GitHub Actions workflow is configured to check Ingress routing in a disposable CI cluster. "
+                "GitHub Actions run #8 passed the Ingress routing check in a disposable CI cluster. "
                 "No persistent public API endpoint is deployed.",
                 "<b>Monitoring scope.</b> Operational metrics only: no data-drift or "
                 "prediction-distribution monitoring and no automated retraining trigger. "
