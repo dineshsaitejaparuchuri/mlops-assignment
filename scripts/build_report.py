@@ -293,7 +293,7 @@ def img(path, width=W, caption=None, max_h=3.9 * cm):
 def table(data, widths, header=True, font=8):
     rows = [[P(str(c), CELL) if isinstance(c, str) else c for c in r] for r in data]
     t = Table(rows, colWidths=widths, repeatRows=1 if header else 0)
-    st = [("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#999999")),
+    st = [("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#1099999")),
           ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
           ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]
     if header:
@@ -340,7 +340,7 @@ s += bullets(toc)
 s += [Spacer(1, 1 * cm),
       P("<b>Scope and verification.</b> The results and screenshots in this report come from the project artifacts and captured runs. "
         "Docker, a local Kubernetes cluster, Prometheus and Grafana were exercised locally. "
-        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400608617' color='#1464a5'>#9</link> passed lint, tests, training, Docker smoke checks, and the disposable kind Ingress test. "
+        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39402219483' color='#1464a5'>#10</link> passed lint, tests, training, Docker smoke checks, and the disposable kind Ingress test. "
         "The local MLflow run store is generated during training and is not included in the source archive, so the report builder "
         "can also read the committed experiment summary on a clean checkout.",
         BODY), PageBreak()]
@@ -558,13 +558,12 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
       img(SHOTS / "terminal_pytest.png", width=W, caption="Figure 10 - pytest -v output "
           "(text captured from a real run, rendered to PNG; docs/run_outputs/pytest_verbose.txt)"),
       P("<b>Local and hosted CI evidence.</b> <font face='Courier'>scripts/run_ci_local.sh</font> "
-        "executes the prior workflow with <font face='Courier'>act</font> and local stubs for GitHub-only actions; "
-        "The saved act transcript is historical and records an earlier 18-test suite. The current local run passes 23 tests, "
+        "The local run passes 23 tests, "
         "and the revised workflow runs lint, tests, training, Docker build/smoke checks, and a disposable kind Ingress smoke test. "
-        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400608617' color='#1464a5'>#9 passed</link>; its Ingress artifact is saved with this report. "
-        "Local act transcript: docs/run_outputs/act_ci_full.txt."),
+        "GitHub Actions run <link href='https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39402219483' color='#1464a5'>#10 passed</link>; its Ingress artifact is saved with this report. "
+        "The uploaded workflow artifacts provide the current hosted logs and test results."),
       img(SHOTS / "ci_ingress_verification.png", width=10.5 * cm, max_h=4 * cm,
-          caption="Figure 11 - GitHub Actions run #9 Ingress route and API smoke test, rendered locally from the uploaded workflow artifact"),
+          caption="Figure 11 - GitHub Actions run #10 Ingress route and API smoke test, rendered locally from the uploaded workflow artifact"),
       PageBreak()]
 
 # ---------------------------------------------------------------- 7 docker
@@ -632,7 +631,7 @@ scripts/smoke_test.sh http://localhost:8000
         "<i>up</i>, and the Grafana dashboard loaded with data. In addition, the GitHub Actions workflow "
         "tests the Ingress route in a disposable kind cluster using cloud-provider-kind. In the local Windows cluster "
         "the Ingress object is applied but has no address; local API access is verified through port-forward. "
-        "GitHub Actions run #9 passed the Ingress check in a disposable cluster; no persistent public service is deployed."),
+        "GitHub Actions run #10 passed the Ingress check in a disposable cluster; no persistent public service is deployed."),
       img(SHOTS / "k8s_pods_services.png", width=W, max_h=5 * cm, caption="Figure 14 - kubectl get pods,svc "
           "(real captured text)"),
       img(SHOTS / "k8s_smoke_test.png", width=W, max_h=5 * cm, caption="Figure 15 - smoke test served by "
@@ -675,7 +674,7 @@ s += [P("9. Results and limitations", H1),
                 "<b>Precision trade-off.</b> The 0.26 threshold maximises recall and therefore "
                 "produces more false positives.",
                 "<b>Deployment verification.</b> Local Docker and kind deployment evidence is included. "
-                "GitHub Actions run #9 passed the Ingress routing check in a disposable CI cluster. "
+                "GitHub Actions run #10 passed the Ingress routing check in a disposable CI cluster. "
                 "No persistent public API endpoint is deployed.",
                 "<b>Monitoring scope.</b> Operational metrics only: no data-drift or "
                 "prediction-distribution monitoring and no automated retraining trigger. "
@@ -709,7 +708,7 @@ s += [P("10. Repository and deliverables map", H1),
             [5.4 * cm, W - 5.4 * cm]),
       Spacer(1, 6),
       P("11. Evidence screenshots", H1),
-      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, plus captured test, lint, Docker, Kubernetes and local-CI output. Browser images were captured from local services; terminal images were rendered from saved command output. GitHub Actions run #9 verified the Ingress route in an ephemeral cluster; this does not provide a public endpoint.", BODY)]
+      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, plus captured test, lint, Docker, Kubernetes and local-CI output. Browser images were captured from local services; terminal images were rendered from saved command output. GitHub Actions run #10 verified the Ingress route in an ephemeral cluster; this does not provide a public endpoint.", BODY)]
 
 first = True
 for i, f in enumerate(s):

@@ -9,8 +9,8 @@ The browser screenshots were captured from the local services; terminal images w
 | `docker_build_run.png`, `docs/run_outputs/docker_build.txt`, `docs/run_outputs/docker_run.txt` | Docker build/run and API smoke test | Refreshed against image version 1.0.0; container runs as non-root and reports healthy. |
 | `k8s_pods_services.png`, `k8s_smoke_test.png`, `docs/run_outputs/k8s_*.txt` | Local Kubernetes resources and API checks | Refreshed; API and monitoring pods are running and port-forward smoke checks pass. Local Ingress routing remains unverified. |
 | `grafana_dashboard.png`, `prometheus_targets.png` | Monitoring dashboard and Prometheus scrape targets | Captured from local services; API targets are up. |
-| `ci_ingress_verification.png`, `docs/run_outputs/ci_ingress_*.txt` | Hosted Ingress address and `/health`, `/predict`, `/metrics` smoke test | Rendered locally from the actual artifact for successful Actions run #9: https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39400608617. |
-| GitHub Actions run #9 | CI lint, tests, training, Docker, and disposable kind Ingress checks | All jobs passed on the current repository commit; artifacts were uploaded. |
+| `ci_ingress_verification.png`, `docs/run_outputs/ci_ingress_*.txt` | Hosted Ingress address and `/health`, `/predict`, `/metrics` smoke test | Rendered locally from the actual artifact for successful Actions run #10: https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39402219483. |
+| GitHub Actions run #10 | CI lint, tests, training, Docker, and disposable kind Ingress checks | All jobs passed in the run; artifacts were uploaded. |
 
 ## Remaining actions
 
