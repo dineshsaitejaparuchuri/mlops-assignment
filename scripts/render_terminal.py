@@ -5,7 +5,6 @@ The text is the real captured output; only the rendering to an image is syntheti
     python scripts/render_terminal.py --ci-ingress  # render the saved hosted Ingress artifact
 """
 import re
-import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
