@@ -1,2 +1,0 @@
-$ flake8 src test
-(exit code 0)

@@ -1,3 +1,6 @@
 [flake8]
 max-line-length = 100
 exclude = .venv,mlruns,.git
+per-file-ignores =
+    scripts/build_report.py:E501
+    scripts/render_terminal.py:E501

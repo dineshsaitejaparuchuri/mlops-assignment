@@ -71,7 +71,7 @@
     {
       "id": 3,
       "type": "timeseries",
-      "title": "Error rate (5xx share)",
+      "title": "Client and server error share",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -91,8 +91,8 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(api_requests_total{status=~\"5..\"}[5m])) / clamp_min(sum(rate(api_requests_total[5m])), 1e-9)",
-          "legendFormat": "5xx ratio"
+          "expr": "sum(rate(api_requests_total{status=~\"4..|5..\"}[5m])) / clamp_min(sum(rate(api_requests_total[5m])), 1e-9)",
+          "legendFormat": "4xx/5xx ratio"
         }
       ]
     },

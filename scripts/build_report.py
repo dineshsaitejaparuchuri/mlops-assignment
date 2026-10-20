@@ -1,6 +1,7 @@
 """Build docs/report/MLOps_Assignment1_Report.pdf and docs/report/architecture.png.
 
-Every number is read from models/metrics.json, mlruns/, data/ or docs/run_outputs/.
+Report facts come from models/metrics.json, the local MLflow store when present,
+the committed docs/experiments.md summary, data/ and docs/run_outputs/.
     python scripts/build_report.py
 """
 import json
@@ -43,7 +44,8 @@ ro = ROOT / "docs" / "run_outputs"
 # ---------------------------------------------------------------- experiment data
 # MLflow's local store is intentionally ignored by Git so the repository stays small.
 # A clean checkout can still rebuild the report from the committed experiment summary;
-# running src.train recreates the full local MLflow history.
+# running src.train recreates the full local MLflow history. Individual run IDs are
+# intentionally shown only when they are present in that history.
 def read_runs_from_markdown() -> pd.DataFrame:
     experiment_text = (ROOT / "docs" / "experiments.md").read_text(encoding="utf-8")
     rows = []
@@ -51,8 +53,7 @@ def read_runs_from_markdown() -> pd.DataFrame:
         if not line.strip().startswith("|"):
             continue
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-        # The committed summary may intentionally omit MLflow run IDs so the
-        # report can be rebuilt from a clean checkout without the local mlruns/ store.
+        # The committed summary omits per-run MLflow IDs; the local store is ignored.
         if len(cells) < 6 or cells[0].strip().lower() == "run" or set(cells[0]) <= {"-", ":"}:
             continue
         run_name = cells[0].strip("` ")
@@ -101,7 +102,14 @@ def read_runs() -> pd.DataFrame:
             # CI may leave older batches in the store; keep the latest batch only.
             out = out[out.start >= out.start.max() - 15 * 60 * 1000].drop(columns="start")
             return out.sort_values("cv_roc_auc", ascending=False)
-    return read_runs_from_markdown()
+    summary = read_runs_from_markdown()
+    # Preserve all run IDs in clean checkouts when metrics.json exports them.
+    summary_run_ids = {
+        item["run"]: item.get("run_id", "")
+        for item in metrics.get("all_runs", [])
+    }
+    summary["run_id"] = summary["run"].map(summary_run_ids).fillna("")
+    return summary
 
 
 runs = read_runs()
@@ -111,11 +119,11 @@ if best["run"] != metrics["best_run"]:
         "The experiment summary and models/metrics.json are out of sync. "
         "Re-run training or update the summary."
     )
-# In a clean checkout, the summary table has no local run IDs. In that case,
-# carry the known ID for the selected run from metrics.json and leave the others blank.
+# In a clean checkout, use exported IDs from metrics.json; the best-run ID is
+# also retained at the top level for older metrics files.
 if not str(best.get("run_id", "")):
     runs.loc[runs["run"] == metrics["best_run"], "run_id"] = metrics["mlflow_run_id"]
-runs["run_id"] = runs["run_id"].fillna("")
+runs["run_id"] = runs["run_id"].fillna("").replace("", "not exported")
 n_pos, n_neg = int(df.target.sum()), int((df.target == 0).sum())
 miss = df.isna().sum()
 miss = miss[miss > 0].to_dict()
@@ -151,23 +159,24 @@ def draw_architecture(path: Path) -> None:
     box(0.2, 4.4, 1.9, 0.9, "UCI Cleveland\nraw data\n(download_data.py)", "#fde8c8")
     box(2.6, 4.4, 1.9, 0.9, "data/\nheart_cleaned.csv\n+ EDA (eda.py)", "#fde8c8")
     box(5.0, 4.4, 2.2, 0.9, "src/train.py\nPipeline: impute+scale\n+one-hot, LR / RF, CV", "#d6e8fa")
-    box(7.7, 4.4, 1.7, 0.9, "MLflow tracking\n+ registry\n(./mlruns)", "#d6f0d6")
+    box(7.7, 4.4, 1.7, 0.9, "MLflow tracking\n+ registry\n(local store)", "#d6f0d6")
     box(9.6, 4.4, 1.2, 0.9, "models/\nmodel.joblib\nmetrics.json", "#e9dcf7")
     arrow(2.1, 4.85, 2.6, 4.85)
     arrow(4.5, 4.85, 5.0, 4.85)
     arrow(7.2, 4.85, 7.7, 4.85, "log")
     arrow(7.2, 4.6, 9.6, 4.6)
-    # row 2: CI
-    box(0.2, 2.75, 3.2, 0.9, "GitHub Actions (ci.yml)\nflake8 -> pytest -> train -> docker build\n-> smoke test -> upload artifacts",
+    # row 2: source control triggers CI; keep the trigger arrow anchored at the repo.
+    box(0.2, 2.75, 1.6, 0.9, "GitHub repo\n(push / PR)", "#f3d4d4")
+    box(2.2, 2.75, 3.2, 0.9, "GitHub Actions (ci.yml)\nflake8 -> pytest -> train -> docker build\n-> smoke test -> upload artifacts",
         "#f3d4d4")
-    arrow(1.8, 4.4, 1.8, 3.65, "push / PR")
-    arrow(3.4, 3.2, 5.0, 4.4)
+    arrow(1.8, 3.2, 2.2, 3.2)
     # row 2: serving
-    box(5.0, 2.75, 2.4, 0.9, "Docker image\nheart-disease-api\n(multi-stage, non-root)", "#d6e8fa")
-    box(8.0, 2.75, 2.8, 0.9, "FastAPI + uvicorn\n/predict  /health  /metrics\nlogs/api.log + stdout", "#d6e8fa")
+    box(5.8, 2.75, 2.4, 0.9, "Docker image\nheart-disease-api\n(multi-stage, non-root)", "#d6e8fa")
+    box(8.6, 2.75, 2.4, 0.9, "FastAPI + uvicorn\n/predict  /health  /metrics\nlogs/api.log + stdout", "#d6e8fa")
     arrow(10.2, 4.4, 10.2, 3.65)
     ax.text(10.35, 4.0, "loaded at\nstartup", fontsize=7)
-    arrow(7.4, 3.2, 8.0, 3.2, "runs")
+    arrow(5.4, 3.2, 5.8, 3.2, "builds")
+    arrow(8.2, 3.2, 8.6, 3.2, "runs")
     # row 3: Kubernetes + monitoring
     ax.add_patch(FancyBboxPatch((0.2, 0.2), 10.6, 2.0, boxstyle="round,pad=0.04",
                                 fc="none", ec="#555", lw=1.4, ls="--"))
@@ -253,8 +262,11 @@ def P(t, s=BODY):
 
 
 def bullets(items):
-    return [P("&bull; " + i, ParagraphStyle("b", parent=BODY, leftIndent=12, firstLineIndent=-8,
-                                           spaceAfter=2)) for i in items]
+    return [
+        P("&bull; " + item,
+          ParagraphStyle("b", parent=BODY, leftIndent=12, firstLineIndent=-8, spaceAfter=2))
+        for item in items
+    ]
 
 
 def code(t):
@@ -290,24 +302,9 @@ def table(data, widths, header=True, font=8):
     return t
 
 
-def todo_box(title, cmd, expect, fname):
-    inner = [P(f"<b>SCREENSHOT TO CAPTURE - {title}</b>",
-               ParagraphStyle("t", parent=CELL, textColor=colors.HexColor("#8a1c1c"), fontSize=9)),
-             P("Not produced in this environment (see docs/MISSING_SCREENSHOTS.md). "
-               "Run the command below on a machine with the required tooling and save as "
-               f"<font face='Courier'>screenshots/{fname}</font>.", CELL),
-             Preformatted(cmd, ParagraphStyle("c", fontName="Courier", fontSize=7.4, leading=9)),
-             P(f"<i>Expected:</i> {expect}", CELL)]
-    t = Table([[inner]], colWidths=[W])
-    t.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 1.2, colors.HexColor("#c0392b")),
-                           ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#fff3f0")),
-                           ("LEFTPADDING", (0, 0), (-1, -1), 8), ("TOPPADDING", (0, 0), (-1, -1), 6),
-                           ("BOTTOMPADDING", (0, 0), (-1, -1), 6)]))
-    return KeepTogether([t, Spacer(1, 8)])
-
-
 def footer(canvas, doc):
     canvas.saveState()
+    canvas.setAuthor(STUDENT_NAME or "MLOps Assignment 1")
     canvas.setFont("Helvetica", 8)
     canvas.setFillColor(colors.grey)
     canvas.drawString(2 * cm, 1.1 * cm, "Heart-disease risk MLOps - Assignment 1 report")
@@ -331,7 +328,7 @@ s += [Spacer(1, 3 * cm), P("Heart-Disease Risk Prediction", TITLE),
              ["Held-out test", f"ROC-AUC {tt['roc_auc']:.3f}; recall {tt['recall']:.3f} at "
                                f"threshold {thr} (accuracy {t5['accuracy']:.3f}, recall "
                                f"{t5['recall']:.3f} at 0.5)"],
-] , [3.5 * cm, W - 3.5 * cm],
+             ], [3.5 * cm, W - 3.5 * cm],
             header=False),
       Spacer(1, 1 * cm), P("Contents", H2)]
 toc = ["1. Setup and installation", "2. Data acquisition and EDA",
@@ -343,8 +340,7 @@ s += bullets(toc)
 s += [Spacer(1, 1 * cm),
       P("<b>Scope and verification.</b> The results and screenshots in this report come from the project artifacts and captured runs. "
         "Docker, a local Kubernetes cluster, Prometheus and Grafana were exercised locally. "
-        "GitHub Actions run #4 passed the full pipeline, including a disposable kind cluster and routed Ingress smoke test. "
-        "Run #5 repeated the workflow successfully on a subsequent documentation-only commit. "
+        "The revised GitHub Actions workflow is configured for lint, tests, training, Docker smoke checks, and a disposable kind Ingress test. "
         "The local MLflow run store is generated during training and is not included in the source archive, so the report builder "
         "can also read the committed experiment summary on a clean checkout.",
         BODY), PageBreak()]
@@ -358,7 +354,7 @@ s += [P("1. Setup and installation", H1),
       code("""
 python3.11 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-pytest test -v && flake8 src test
+pytest test -v && flake8 src test scripts
 """),
       P("The cleaned CSV is included, so a first run does not need to download the data again. To reproduce that step, run "
         "<font face='Courier'>python -m src.download_data</font>; create the EDA figures with "
@@ -476,13 +472,15 @@ s += [P("4. Experiment tracking with MLflow", H1),
       P(f"The table below is sorted by mean cross-validation ROC-AUC. When the local MLflow store is present, the report reads metrics from it; "
         "on a clean checkout it uses the committed experiment summary so the PDF can still be rebuilt before the next training run. "
         f"There are {len(runs)} recorded configurations.", BODY)]
-tdata = [["run", "cv acc", "cv prec", "cv recall", "cv ROC-AUC", "test ROC-AUC", "run id"]]
+tdata = [["run", "cv acc", "cv prec", "cv recall", "cv ROC-AUC", "test ROC-AUC", "run ID*"]]
 for _, r in runs.iterrows():
     tdata.append([r["run"], f"{r['cv_accuracy']:.3f}", f"{r['cv_precision']:.3f}",
                   f"{r['cv_recall']:.3f}", f"{r['cv_roc_auc']:.3f} ± {r['cv_roc_auc_std']:.3f}",
-                  f"{r['test_roc_auc']:.3f}", r["run_id"][:8]])
+                  f"{r['test_roc_auc']:.3f}", r["run_id"][:8] if r["run_id"] != "not exported"
+                  else "not exported"])
 s += [table(tdata, [4.6 * cm, 1.3 * cm, 1.4 * cm, 1.6 * cm, 2.6 * cm, 2.1 * cm, W - 14.6 * cm]),
       Spacer(1, 6),
+      P("* All nine run IDs are exported in models/metrics.json and can be checked against the local MLflow store.", CAP),
       P("The cross-validation standard deviations (about 0.014 to 0.037 for ROC-AUC) are large enough that small gaps between runs should not be overinterpreted. "
         "In this experiment Logistic Regression was competitive with, and slightly ahead of, the Random Forest candidates. The experiment notes and metrics file "
         "are kept alongside the code so the reported figures can be checked."),
@@ -510,7 +508,7 @@ s += [P("5. Architecture", H1),
       P("<b>API contract.</b>", BODY),
       table([["Endpoint", "Behaviour"],
              ["POST /predict", "13 raw features as JSON, validated by pydantic ranges (422 otherwise); "
-              "returns prediction, label, confidence, probability_disease"],
+              "returns prediction, label, probability_predicted_class, probability_disease"],
              ["GET /health", "liveness/readiness; reports whether the model is loaded"],
              ["GET /metrics", "Prometheus exposition: api_requests_total, "
               "api_request_latency_seconds, model_predictions_total"]],
@@ -521,10 +519,11 @@ s += [P("5. Architecture", H1),
 curl -X POST localhost:8000/predict -H 'Content-Type: application/json' \\
   -d '{"age":57,"sex":1,"cp":4,"trestbps":140,"chol":241,"fbs":0,"restecg":0,
        "thalach":123,"exang":1,"oldpeak":0.2,"slope":2,"ca":0,"thal":7}'
-{"prediction":1,"label":"heart disease","confidence":0.848,"probability_disease":0.848}
+{"prediction":1,"label":"heart disease","probability_predicted_class":0.848,"probability_disease":0.848}
 """),
-      P("The API returns both the probability of the disease class and the confidence associated with the predicted label. "
-        "For invalid input, such as an age of 250, FastAPI returns HTTP 422 and identifies the field that failed validation."),
+      P(f"The API returns both the probability of the disease class and the probability of the class selected by its tuned threshold ({thr}). "
+        "Because that threshold is selected to favor recall, the predicted class can be disease even when its probability is below 0.5; "
+        "the probability_predicted_class field names this meaning directly. For invalid input, such as an age of 250, FastAPI returns HTTP 422 and identifies the field that failed validation."),
       img(SHOTS / "api_docs.png", width=10.5 * cm, max_h=7.5 * cm, caption="Figure 9 - FastAPI interactive "
           "documentation at /docs (real screenshot)"),
       PageBreak()]
@@ -543,16 +542,16 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
         "<font face='Courier'>tee</font> keeps logs while preserving failures:"),
       table([["#", "Step", "What it enforces"],
              ["1", "Install dependencies", "clean install from requirements.txt"],
-             ["2", "Lint", "flake8 src test -> ci-output/flake8.txt"],
-             ["3", "Unit tests", "pytest -v + JUnit XML -> ci-output/"],
+             ["2", "Lint", "flake8 src test scripts -> ci-output/flake8.txt"],
+             ["3", "Unit tests", "pytest + coverage, JUnit XML -> ci-output/"],
              ["4", "Train model", "python -m src.train (9 MLflow runs) -> ci-output/train.txt"],
              ["5", "Verify artifacts", "models/model.joblib and metrics.json must exist"],
              ["6", "Summarise MLflow runs", "lists run metadata -> ci-output/mlruns-summary.txt"],
-             ["7", "Build Docker image", "docker build -t heart-disease-api:ci and :latest ."],
+             ["7", "Build Docker image", "docker build -t heart-disease-api:ci and :1.0.0 ."],
              ["8", "Smoke test container", "scripts/smoke_test.sh: /health, /predict, /metrics"],
-             ["9", "Kubernetes Ingress", "disposable kind cluster; route all smoke checks via heart.local"],
-             ["10", "Container logs", "always(): docker logs -> ci-output/container.log"],
-             ["11", "Upload artifacts", "always(): model, metrics, logs/, ci-output/, mlruns/"]],
+             ["9", "Container logs", "always(): docker logs -> ci-output/container.log"],
+             ["10", "Upload artifacts", "always(): model, metrics, logs/, ci-output/, mlruns/"],
+             ["Separate job", "Kubernetes Ingress", "disposable kind cluster; route smoke checks via heart.local"]],
             [0.8 * cm, 4.4 * cm, W - 5.2 * cm]),
       Spacer(1, 6),
       P("Retraining in CI is intended to catch changes that break the training process, saved-model contract or container before a change is merged. Each workflow run also uploads logs, JUnit output, the model and the MLflow run store for inspection. The GitHub Actions workflow additionally creates a disposable kind cluster, installs the project manifests and tests the API through the Ingress host route. That cluster is deleted at the end of the job; it is not a persistent deployment."),
@@ -560,12 +559,10 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
           "(text captured from a real run, rendered to PNG; docs/run_outputs/pytest_verbose.txt)"),
       P("<b>Local and hosted CI evidence.</b> <font face='Courier'>scripts/run_ci_local.sh</font> "
         "executes the prior workflow with <font face='Courier'>act</font> and local stubs for GitHub-only actions; "
-        "its captured run passed 18 tests, lint, training, Docker build and container smoke tests. "
-        "GitHub Actions run #4 passed all hosted steps, including the kind Ingress check; run #5 repeated "
-        "the full workflow successfully on a subsequent documentation-only commit. Local act log: docs/run_outputs/act_ci_full.txt."),
-      img(SHOTS / "ci_ingress_verification.png", width=10.5 * cm, max_h=4 * cm,
-          caption="Figure 11 - GitHub Actions run #4 Ingress route and API smoke-test output; "
-          "actual workflow artifact rendered locally"),
+        "The saved act transcript is historical and records an earlier 18-test suite. The current local run passes 23 tests, "
+        "and the revised workflow is configured for lint, tests, training, Docker build/smoke checks, and a disposable kind Ingress smoke test. "
+        "The saved act transcript is historical and records an earlier 18-test suite. "
+        "Local act transcript: docs/run_outputs/act_ci_full.txt. The final hosted run is checked after this revision is pushed."),
       PageBreak()]
 
 # ---------------------------------------------------------------- 7 docker
@@ -579,8 +576,8 @@ s += [P("7. Containerisation", H1),
         "<font face='Courier'>uvicorn src.api:app</font>. A build-time check fails the build if "
         "<font face='Courier'>src/api.py</font> is missing."),
       code("""
-docker build -t heart-disease-api:latest .
-docker run -d --name heart-api -p 8000:8000 heart-disease-api:latest
+docker build -t heart-disease-api:1.0.0 .
+docker run -d --name heart-api -p 8000:8000 heart-disease-api:1.0.0
 scripts/smoke_test.sh http://localhost:8000      # /health, /predict, /metrics
 docker compose up --build                        # API + Prometheus :9090 + Grafana :3000
 """),
@@ -623,7 +620,7 @@ scripts/smoke_test.sh http://localhost:8000
         "start-up. <b>Metrics.</b> Prometheus counters and histograms are exposed at "
         "<font face='Courier'>/metrics</font>: request count by method/path/status, latency "
         "histogram by path, and predictions by label. The provisioned Grafana dashboard 'Heart "
-        "Disease API' has four panels: request rate, p95 latency, 5xx error share and predictions "
+        "Disease API' has four panels: request rate, p95 latency, client/server error share and predictions "
         "by label. The scrape target and dashboards are the same in docker-compose and Kubernetes."),
       img(crop(SHOTS / "api_metrics.png", (0, 270, 1200, 560), "metrics.png"), width=13 * cm, caption="Figure 13 - GET /metrics from the "
           "running API (api_requests_total and latency histogram visible; real screenshot)"),
@@ -631,9 +628,9 @@ scripts/smoke_test.sh http://localhost:8000
         "2/2 heart-api pods Ready, plus Prometheus and Grafana; the smoke test passed through "
         "<font face='Courier'>kubectl port-forward</font>; Prometheus showed both heart-api pods as "
         "<i>up</i>, and the Grafana dashboard loaded with data. In addition, the GitHub Actions workflow "
-        "tests the Ingress route in a disposable kind cluster using cloud-provider-kind. This confirms "
-        "routing for the CI environment only; no persistent public service is deployed. The older local screenshot below "
-        "shows the port-forward run before that provider was added."),
+        "tests the Ingress route in a disposable kind cluster using cloud-provider-kind. In the local Windows cluster "
+        "the Ingress object is applied but has no address; local API access is verified through port-forward. "
+        "The hosted CI workflow is configured to check Ingress behavior in a disposable cluster; no persistent public service is deployed."),
       img(SHOTS / "k8s_pods_services.png", width=W, max_h=5 * cm, caption="Figure 14 - kubectl get pods,svc "
           "(real captured text)"),
       img(SHOTS / "k8s_smoke_test.png", width=W, max_h=5 * cm, caption="Figure 15 - smoke test served by "
@@ -641,8 +638,8 @@ scripts/smoke_test.sh http://localhost:8000
       img(SHOTS / "prometheus_targets.png", width=W, max_h=5 * cm, caption="Figure 16 - Prometheus targets "
           "page (real browser screenshot)"),
       img(SHOTS / "grafana_dashboard.png", width=W, max_h=7 * cm, caption="Figure 17 - Grafana "
-          "'Heart Disease API' dashboard (real browser screenshot; the 5xx panel is empty because "
-          "no errors occurred)"),
+          "'Heart Disease API' dashboard (real browser screenshot; the 4xx/5xx panel is empty because "
+          "no errors occurred during the scrape window)"),
       PageBreak()]
 
 # ---------------------------------------------------------------- 9 results
@@ -676,8 +673,8 @@ s += [P("9. Results and limitations", H1),
                 "<b>Precision trade-off.</b> The 0.26 threshold maximises recall and therefore "
                 "produces more false positives.",
                 "<b>Deployment verification.</b> Local Docker and kind deployment evidence is included. "
-                "GitHub Actions runs #4 and #5 passed the full application pipeline and verified Ingress "
-                "routing in a disposable CI cluster. No persistent public API endpoint is deployed.",
+                "The GitHub Actions workflow is configured to check Ingress routing in a disposable CI cluster. "
+                "No persistent public API endpoint is deployed.",
                 "<b>Monitoring scope.</b> Operational metrics only: no data-drift or "
                 "prediction-distribution monitoring and no automated retraining trigger. "
                 "The MLflow store is local files, so it is not shared between machines."]),
@@ -687,7 +684,7 @@ s += [P("9. Results and limitations", H1),
 
 # ---------------------------------------------------------------- 10 repo
 s += [P("10. Repository and deliverables map", H1),
-      P(f"<b>Code repository:</b> {REPO_URL if REPO_URL else 'Publication to GitHub is the remaining external step; see docs/UPLOAD_TO_GITHUB.md.'} "
+      P(f"<b>Code repository:</b> {REPO_URL if REPO_URL else 'Set HEART_MLOPS_REPO_URL before building the report.'} "
         "<b>API access:</b> no public endpoint is configured; run locally "
         "(<font face='Courier'>uvicorn src.api:app --port 8000</font>, "
         "<font face='Courier'>docker run -p 8000:8000 heart-disease-api</font>, or the Kubernetes "
@@ -697,7 +694,7 @@ s += [P("10. Repository and deliverables map", H1),
               "docs/eda_summary.txt, Section 2"],
              ["Features and models (>=2, CV, metrics)", "src/features.py, src/train.py, "
               "notebooks/02_training.ipynb, docs/experiments.md, Section 3"],
-             ["Experiment tracking", "mlruns/ (via src/train.py), screenshots/mlflow_*.png, Section 4"],
+             ["Experiment tracking", "docs/experiments.md (committed run summary); local mlruns/ recreated by src/train.py; screenshots/mlflow_*.png, Section 4"],
              ["Packaging and reproducibility", "models/model.joblib, requirements.txt, pipeline in "
               "src/features.py"],
              ["Unit tests + CI/CD", "test/, .github/workflows/ci.yml, docs/run_outputs/, Section 6"],
@@ -710,7 +707,7 @@ s += [P("10. Repository and deliverables map", H1),
             [5.4 * cm, W - 5.4 * cm]),
       Spacer(1, 6),
       P("11. Evidence screenshots", H1),
-      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, plus captured test, lint, Docker, Kubernetes and local-CI output. Browser images were captured from local services; terminal images were rendered from saved command output. Hosted CI status is available in the repository Actions tab. The Ingress route is tested in an ephemeral cluster; this does not provide a public endpoint.", BODY)]
+      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, plus captured test, lint, Docker, Kubernetes and local-CI output. Browser images were captured from local services; terminal images were rendered from saved command output. Hosted CI status is available in the repository Actions tab. The Ingress route is configured for testing in an ephemeral cluster; this does not provide a public endpoint.", BODY)]
 
 first = True
 for i, f in enumerate(s):
@@ -719,6 +716,7 @@ for i, f in enumerate(s):
 
 doc = SimpleDocTemplate(str(PDF), pagesize=A4, leftMargin=1.7 * cm, rightMargin=1.7 * cm,
                         topMargin=1.5 * cm, bottomMargin=1.6 * cm,
-                        title="Heart-disease risk MLOps - Assignment 1 report")
+                        title="Heart-disease risk MLOps - Assignment 1 report",
+                        author=STUDENT_NAME or "MLOps Assignment 1")
 doc.build(s, onFirstPage=footer, onLaterPages=footer)
 print("wrote", PDF)

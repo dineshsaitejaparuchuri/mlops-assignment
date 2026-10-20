@@ -1,8 +1,55 @@
-..................                                                       [100%]
-=============================== warnings summary ===============================
-.venv/lib/python3.11/site-packages/fastapi/testclient.py:1
-  [project-root]/.venv/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.7.0 -- C:\Users\Dinesh\Downloads\heart-mlops-submission\heart-mlops-final\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Dinesh\Downloads\heart-mlops-submission\heart-mlops-final
+plugins: anyio-4.15.1, platformdirs-4.13.5, cov-7.1.0
+collecting ... collected 23 items
+
+test/test_api.py::test_health PASSED                                     [  4%]
+test/test_api.py::test_predict_ok PASSED                                 [  8%]
+test/test_api.py::test_tuned_threshold_prediction_probability_below_half PASSED [ 13%]
+test/test_api.py::test_predict_returns_503_when_model_not_loaded PASSED  [ 17%]
+test/test_api.py::test_predict_rejects_out_of_range[age-5] PASSED        [ 21%]
+test/test_api.py::test_predict_rejects_out_of_range[age-150] PASSED      [ 26%]
+test/test_api.py::test_predict_rejects_out_of_range[chol-5000] PASSED    [ 30%]
+test/test_api.py::test_predict_rejects_out_of_range[sex-2] PASSED        [ 34%]
+test/test_api.py::test_predict_rejects_out_of_range[cp-0] PASSED         [ 39%]
+test/test_api.py::test_predict_rejects_out_of_range[oldpeak--1] PASSED   [ 43%]
+test/test_api.py::test_predict_rejects_out_of_range[thalach-fast] PASSED [ 47%]
+test/test_api.py::test_predict_rejects_missing_field PASSED              [ 52%]
+test/test_api.py::test_predict_ignores_extra_fields PASSED               [ 56%]
+test/test_api.py::test_metrics_exposes_counters PASSED                   [ 60%]
+test/test_api.py::test_model_artifact_roundtrip PASSED                   [ 65%]
+test/test_features.py::test_clean_binarizes_and_drops_question_marks PASSED [ 69%]
+test/test_features.py::test_committed_csv_shape PASSED                   [ 73%]
+test/test_features.py::test_hr_reserve_is_fraction_of_age_max PASSED     [ 78%]
+test/test_features.py::test_preprocessor_output_has_no_nan_and_scaled_numerics PASSED [ 82%]
+test/test_features.py::test_unseen_category_does_not_break_pipeline PASSED [ 86%]
+test/test_features.py::test_missing_values_are_imputed PASSED            [ 91%]
+test/test_train.py::test_pick_threshold_meets_recall_target_without_exceeding_found_bound PASSED [ 95%]
+test/test_train.py::test_committed_metrics_has_reproducible_structure PASSED [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\Dinesh\Downloads\heart-mlops-submission\heart-mlops-final\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-18 passed, 1 warning in 0.10s
+- generated xml file: C:\Users\Dinesh\Downloads\heart-mlops-submission\heart-mlops-final\docs\run_outputs\pytest_junit.xml -
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.10-final-0 _______________
+
+Name                   Stmts   Miss  Cover   Missing
+----------------------------------------------------
+src\__init__.py            0      0   100%
+src\api.py                74      3    96%   30, 37-38
+src\download_data.py      32     15    53%   26-40, 44
+src\eda.py                51     51     0%   1-64
+src\features.py           23      1    96%   40
+src\predict.py            23     23     0%   3-39
+src\schemas.py            21      0   100%
+src\train.py             111     69    38%   65-79, 83-165, 170-182, 234
+----------------------------------------------------
+TOTAL                    335    162    52%
+Coverage XML written to file docs/run_outputs/coverage.xml
+======================== 23 passed, 1 warning in 3.63s ========================

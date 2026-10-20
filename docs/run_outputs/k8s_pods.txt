@@ -1,16 +1,15 @@
-$ kubectl -n heart-mlops get pods,svc -o wide
-NAME                              READY   STATUS    RESTARTS   AGE   IP           NODE                        NOMINATED NODE   READINESS GATES
-pod/grafana-d99c66b85-rfcmg       1/1     Running   0          79s   10.244.0.5   heart-mlops-control-plane   <none>           <none>
-pod/heart-api-584584879d-7wq7f    1/1     Running   0          79s   10.244.0.4   heart-mlops-control-plane   <none>           <none>
-pod/heart-api-584584879d-px528    1/1     Running   0          79s   10.244.0.7   heart-mlops-control-plane   <none>           <none>
-pod/prometheus-74776f6f6d-sf456   1/1     Running   0          79s   10.244.0.2   heart-mlops-control-plane   <none>           <none>
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/grafana-744c4cdb78-hv7dq     1/1     Running   0          85s
+pod/heart-api-69c8bdb974-9m6cf   1/1     Running   0          86s
+pod/heart-api-69c8bdb974-s7nrx   1/1     Running   0          86s
+pod/prometheus-df856b894-tdxxd   1/1     Running   0          85s
 
-NAME                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE   SELECTOR
-service/grafana              ClusterIP   10.96.135.136   <none>        3000/TCP       79s   app=grafana
-service/heart-api            ClusterIP   10.96.100.94    <none>        80/TCP         79s   app=heart-api
-service/heart-api-nodeport   NodePort    10.96.117.55    <none>        80:30080/TCP   79s   app=heart-api
-service/prometheus           ClusterIP   10.96.106.109   <none>        9090/TCP       79s   app=prometheus
+NAME                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/grafana              ClusterIP   10.96.165.86    <none>        3000/TCP       85s
+service/heart-api            ClusterIP   10.96.51.140    <none>        80/TCP         86s
+service/heart-api-nodeport   NodePort    10.96.108.138   <none>        80:30080/TCP   86s
+service/prometheus           ClusterIP   10.96.81.17     <none>        9090/TCP       85s
 
-$ kubectl apply --dry-run=server -f k8s/ingress.yaml
-ingress.networking.k8s.io/heart-api created (server dry run)
-(ingress-nginx controller not installed: its manifest is hosted on GitHub; access is via port-forward / NodePort)
+NAME                                  CLASS    HOSTS         ADDRESS   PORTS   AGE
+ingress.networking.k8s.io/heart-api   <none>   heart.local             80      86s
+

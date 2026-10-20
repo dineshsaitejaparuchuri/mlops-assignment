@@ -14,3 +14,13 @@ dist/
 .coverage
 htmlcov/
 .ruff_cache/
+
+.tools/
+work/
+
+# Local runtime logs from development services
+docs/run_outputs/*_stdout.txt
+docs/run_outputs/*_stderr.txt
+docs/run_outputs/*_forward.txt
+docs/run_outputs/*_forward_err.txt
+docs/run_outputs/docker_container.log

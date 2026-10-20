@@ -6,10 +6,10 @@
   },
   "decision_threshold": 0.26,
   "target_recall": 0.9,
-  "mlflow_run_id": "a7a6cacd42654ff5b74e3997b240d19b",
+  "mlflow_run_id": "9fc328081ab84c37a9473461a239278a",
   "registered_model": {
     "name": "heart-disease-classifier",
-    "version": "2"
+    "version": "1"
   },
   "cv_metrics": {
     "accuracy": 0.846938775510204,
@@ -34,54 +34,63 @@
   "all_runs": [
     {
       "run": "logreg-C0.03",
+      "run_id": "7076db35cd354c7981c341a276b2dce8",
       "cv_roc_auc": 0.8882436404175534,
       "cv_recall": 0.7106719367588932,
       "test_roc_auc": 0.9642857142857143
     },
     {
       "run": "logreg-C0.3",
+      "run_id": "9fc328081ab84c37a9473461a239278a",
       "cv_roc_auc": 0.9038005472788081,
       "cv_recall": 0.7830039525691699,
       "test_roc_auc": 0.9696969696969697
     },
     {
       "run": "logreg-C3.0",
+      "run_id": "66d9bef3cf38433fa2167e00e5992d11",
       "cv_roc_auc": 0.9021891152325935,
       "cv_recall": 0.783399209486166,
       "test_roc_auc": 0.9632034632034633
     },
     {
       "run": "random_forest-max_depth3-min_samples_leaf1",
+      "run_id": "c900b437add540508ec18963179c8168",
       "cv_roc_auc": 0.8926370730718556,
       "cv_recall": 0.7553359683794465,
       "test_roc_auc": 0.9469696969696969
     },
     {
       "run": "random_forest-max_depth3-min_samples_leaf4",
+      "run_id": "b489ac93867341a3ae06bcb4a107dbec",
       "cv_roc_auc": 0.8954190736799432,
       "cv_recall": 0.7553359683794465,
       "test_roc_auc": 0.9502164502164502
     },
     {
       "run": "random_forest-max_depth6-min_samples_leaf1",
+      "run_id": "36ec798779df446fbd197efb4238ee0b",
       "cv_roc_auc": 0.8791071247592986,
       "cv_recall": 0.7644268774703556,
       "test_roc_auc": 0.949134199134199
     },
     {
       "run": "random_forest-max_depth6-min_samples_leaf4",
+      "run_id": "d051332eb3e445ffb2306b2026dd2947",
       "cv_roc_auc": 0.8937440176570611,
       "cv_recall": 0.782608695652174,
       "test_roc_auc": 0.9458874458874458
     },
     {
       "run": "random_forest-max_depthNone-min_samples_leaf1",
+      "run_id": "08bdadf883d14d15a707f5ea1e22da20",
       "cv_roc_auc": 0.8764129590216546,
       "cv_recall": 0.7826086956521738,
       "test_roc_auc": 0.948051948051948
     },
     {
       "run": "random_forest-max_depthNone-min_samples_leaf4",
+      "run_id": "d7c1f4a6055a4e89a8f362fb20676ff6",
       "cv_roc_auc": 0.8937699176829612,
       "cv_recall": 0.7735177865612648,
       "test_roc_auc": 0.9469696969696969

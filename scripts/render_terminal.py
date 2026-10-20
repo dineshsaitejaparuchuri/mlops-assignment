@@ -24,6 +24,7 @@ PAD = 18
 
 
 def render(lines: list[str], title: str, dest: Path) -> None:
+    lines = lines or ["No lint issues."]
     width = max(len(line) for line in lines) * 10 + 2 * PAD
     height = len(lines) * LINE_H + 2 * PAD + 34
     img = Image.new("RGB", (max(width, 760), height), "#1e1e1e")
@@ -49,25 +50,18 @@ def render(lines: list[str], title: str, dest: Path) -> None:
 
 def main() -> None:
     ro = ROOT / "docs" / "run_outputs"
-    if sys.argv[1:] == ["--ci-ingress"]:
-        status = (ro / "ci_run4_ingress_status.txt").read_text().splitlines()
-        smoke = (ro / "ci_run4_ingress_smoke.txt").read_text().splitlines()
-        lines = [*status, "", *smoke]
-        render(lines, "GitHub Actions run #4 - Ingress verification (captured output)",
-               OUT / "ci_ingress_verification.png")
-        return
-
-    pt = (ro / "pytest_verbose.txt").read_text().splitlines()
+    pt = (ro / "pytest_verbose.txt").read_text(encoding="utf-8", errors="replace").splitlines()
     pt = [ln for ln in pt if not ln.startswith(("cachedir", "rootdir", "plugins"))]
     render(pt, "terminal - pytest (captured output)", OUT / "terminal_pytest.png")
-    render((ro / "flake8_run.txt").read_text().splitlines(),
+    render((ro / "flake8_run.txt").read_text(encoding="utf-8", errors="replace").splitlines(),
            "terminal - flake8 (captured output)", OUT / "terminal_flake8.png")
-    tl = [ln for ln in (ro / "train_log.txt").read_text().splitlines()
+    tl = [ln for ln in (ro / "train_log.txt").read_text(encoding="utf-8", errors="replace").splitlines()
           if "cv_auc=" in ln or ln.startswith(("Successfully", "Created version"))]
     render(["$ python -m src.train"] + tl, "terminal - training (captured output)",
            OUT / "terminal_train.png")
 
-    tail_lines = lambda f: (ro / f).read_text().splitlines()
+    def tail_lines(filename):
+        return (ro / filename).read_text(encoding="utf-8", errors="replace").splitlines()
     render(tail_lines("docker_run.txt"), "terminal - docker build / run / smoke (captured output)",
            OUT / "docker_build_run.png")
     pods = [ln for ln in tail_lines("k8s_pods.txt")]

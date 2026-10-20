@@ -1,13 +1,10 @@
-$ kubectl -n heart-mlops port-forward svc/heart-api 8000:80 &
-$ scripts/smoke_test.sh http://localhost:8000
-GET /health
+$ kubectl -n heart-mlops port-forward svc/heart-api 18080:80
+Forwarding from 127.0.0.1:18080 -> 8000
+$ curl http://127.0.0.1:18080/health
 {"status":"ok","model_loaded":true}
-POST /predict
-{"prediction":1,"label":"heart disease","confidence":0.848,"probability_disease":0.848}
-GET /metrics
-# HELP python_gc_objects_collected_total Objects collected during gc
-# TYPE python_gc_objects_collected_total counter
-python_gc_objects_collected_total{generation="0"} 1337.0
-python_gc_objects_collected_total{generation="1"} 74.0
-python_gc_objects_collected_total{generation="2"} 20.0
-smoke test passed
+$ curl -X POST http://127.0.0.1:18080/predict
+{"prediction":1,"label":"heart disease","probability_predicted_class":0.848,"probability_disease":0.848}
+$ curl http://127.0.0.1:18080/metrics
+api_requests_total{method="GET",path="/health",status="200"} 25.0
+api_requests_total{method="POST",path="/predict",status="200"} 1.0
+model_predictions_total{label="heart disease"} 1.0

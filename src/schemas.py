@@ -22,5 +22,5 @@ class PatientFeatures(BaseModel):
 class Prediction(BaseModel):
     prediction: Literal[0, 1]
     label: str
-    confidence: float = Field(ge=0, le=1)
+    probability_predicted_class: float = Field(ge=0, le=1)
     probability_disease: float = Field(ge=0, le=1)

@@ -28,7 +28,7 @@ cleanup() {
 trap cleanup EXIT
 
 kind create cluster --name "$CLUSTER_NAME" --image "$NODE_IMAGE" --wait 5m
-kind load docker-image heart-disease-api:latest --name "$CLUSTER_NAME"
+kind load docker-image heart-disease-api:1.0.0 --name "$CLUSTER_NAME"
 kubectl label node "${CLUSTER_NAME}-control-plane" \
   node.kubernetes.io/exclude-from-external-load-balancers- --overwrite
 

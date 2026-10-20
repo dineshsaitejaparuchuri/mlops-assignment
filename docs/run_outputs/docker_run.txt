@@ -1,26 +1,17 @@
-$ docker build -t heart-disease-api:latest .
-... (build succeeded, see docs/run_outputs/docker_build.txt)
-$ docker run -d --name heart-api -p 8000:8000 heart-disease-api:latest
-$ docker ps
-IMAGE                      STATUS                    PORTS                                         NAMES
-heart-disease-api:latest   Up 33 seconds (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp   heart-api
-$ docker exec heart-api id -u
-10001
-$ docker exec heart-api ls -l models/model.joblib
--rw-r--r-- 1 app app 5680 Oct 10 14:32 models/model.joblib
-$ docker inspect -f {{.State.Health.Status}} heart-api
-healthy
-$ scripts/smoke_test.sh http://localhost:8000
-GET /health
+$ docker run -d --name heart-api-final-check -p 18000:8000 heart-disease-api:1.0.0
+e1b611a5c66b1a5ce5a85fef97ce35e470e463a1c757191c19432af9a5dd5806
+$ docker inspect --format "user={{.Config.User}} health={{.State.Health.Status}}" heart-api-final-check
+user=app health=healthy
+model-present
+$ curl http://localhost:18000/health
 {"status":"ok","model_loaded":true}
-POST /predict
-{"prediction":1,"label":"heart disease","confidence":0.848,"probability_disease":0.848}
-GET /metrics
-# HELP python_gc_objects_collected_total Objects collected during gc
-# TYPE python_gc_objects_collected_total counter
-python_gc_objects_collected_total{generation="0"} 1475.0
-python_gc_objects_collected_total{generation="1"} 55.0
-python_gc_objects_collected_total{generation="2"} 20.0
-smoke test passed
-$ curl -X POST /predict -d {"age":"x"}  -> HTTP status
-422
+$ curl -X POST http://localhost:18000/predict [valid sample]
+{"prediction":1,"label":"heart disease","probability_predicted_class":0.848,"probability_disease":0.848}
+$ curl -X POST http://localhost:18000/predict [missing fields]
+HTTP 422 validation returned
+$ curl http://localhost:18000/metrics
+api_requests_total{method="GET",path="/health",status="200"} 2.0
+api_requests_total{method="POST",path="/predict",status="200"} 1.0
+api_requests_total{method="POST",path="/predict",status="422"} 1.0
+model_predictions_total{label="heart disease"} 1.0
+$ docker rm -f heart-api-final-check

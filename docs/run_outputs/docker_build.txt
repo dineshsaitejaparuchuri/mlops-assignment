@@ -1,25 +1,221 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 997B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.11-slim
+#2 ...
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.11-slim
+#2 DONE 3.9s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 160B 0.0s done
+#4 DONE 0.0s
+
+#5 [builder 1/5] FROM docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9ea65f6ce
+#5 resolve docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9ea65f6ce 0.0s done
+#5 ...
+
+#6 [internal] load build context
+#6 transferring context: 60.30kB 0.0s done
+#6 DONE 0.1s
+
+#5 [builder 1/5] FROM docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9ea65f6ce
+#5 sha256:496c1a902b3a93cea3e54b90b79dbcaa0e58ad90c3fe9dd0a43c9557dc47f17d 0B / 250B 0.2s
+#5 sha256:496c1a902b3a93cea3e54b90b79dbcaa0e58ad90c3fe9dd0a43c9557dc47f17d 250B / 250B 0.3s done
+#5 sha256:0f752a1982d6f819fc2c9e78ac1514c63f2f2e1dec7885ffd4cb6809ba4a26ca 0B / 1.29MB 0.2s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 0B / 14.46MB 0.2s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 0B / 29.84MB 0.2s
+#5 sha256:0f752a1982d6f819fc2c9e78ac1514c63f2f2e1dec7885ffd4cb6809ba4a26ca 1.29MB / 1.29MB 0.7s done
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 1.05MB / 14.46MB 0.9s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 3.15MB / 14.46MB 1.1s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 4.19MB / 14.46MB 1.2s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 5.24MB / 14.46MB 1.5s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 6.29MB / 14.46MB 2.0s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 7.34MB / 14.46MB 2.3s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 2.10MB / 29.84MB 2.3s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 8.39MB / 14.46MB 2.9s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 4.19MB / 29.84MB 3.0s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 9.44MB / 14.46MB 3.3s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 10.49MB / 14.46MB 3.8s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 6.29MB / 29.84MB 3.9s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 11.53MB / 14.46MB 4.2s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 12.58MB / 14.46MB 4.8s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 8.39MB / 29.84MB 4.8s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 13.63MB / 14.46MB 5.3s
+#5 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 14.46MB / 14.46MB 5.5s done
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 10.49MB / 29.84MB 5.6s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 12.58MB / 29.84MB 6.3s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 14.68MB / 29.84MB 6.8s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 16.78MB / 29.84MB 7.1s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 18.87MB / 29.84MB 7.4s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 20.97MB / 29.84MB 7.8s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 23.07MB / 29.84MB 8.3s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 25.17MB / 29.84MB 8.7s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 27.04MB / 29.84MB 9.0s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 29.84MB / 29.84MB 9.6s
+#5 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 29.84MB / 29.84MB 9.6s done
+#5 extracting sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e
+#5 extracting sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 0.6s done
+#5 DONE 10.3s
+
+#5 [builder 1/5] FROM docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9ea65f6ce
+#5 extracting sha256:0f752a1982d6f819fc2c9e78ac1514c63f2f2e1dec7885ffd4cb6809ba4a26ca 0.1s done
+#5 extracting sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1
+#5 extracting sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 0.4s done
+#5 DONE 10.8s
+
+#5 [builder 1/5] FROM docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9ea65f6ce
+#5 extracting sha256:496c1a902b3a93cea3e54b90b79dbcaa0e58ad90c3fe9dd0a43c9557dc47f17d 0.0s done
+#5 DONE 10.8s
+
+#7 [builder 2/5] WORKDIR /build
+#7 DONE 0.1s
+
+#8 [stage-1 2/8] RUN groupadd --gid 10001 app && useradd --uid 10001 --gid app --create-home app
+#8 DONE 0.3s
+
+#9 [builder 3/5] RUN python -m venv /opt/venv
+#9 ...
+
+#10 [stage-1 3/8] WORKDIR /app
+#10 DONE 0.0s
+
+#9 [builder 3/5] RUN python -m venv /opt/venv
+#9 DONE 3.2s
+
+#11 [builder 4/5] COPY requirements-serve.txt .
+#11 DONE 0.0s
+
+#12 [builder 5/5] RUN pip install -r requirements-serve.txt
+#12 0.759 Collecting fastapi==0.143.0 (from -r requirements-serve.txt (line 1))
+#12 1.032   Downloading fastapi-0.143.0-py3-none-any.whl.metadata (26 kB)
+#12 1.135 Collecting joblib==1.6.0 (from -r requirements-serve.txt (line 2))
+#12 1.200   Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+#12 1.537 Collecting numpy==2.4.6 (from -r requirements-serve.txt (line 3))
+#12 1.602   Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+#12 1.777 Collecting pandas==3.0.6 (from -r requirements-serve.txt (line 4))
+#12 1.842   Downloading pandas-3.0.6-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (79 kB)
+#12 1.910      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.5/79.5 kB 1.1 MB/s eta 0:00:00
+#12 1.989 Collecting prometheus_client==0.26.0 (from -r requirements-serve.txt (line 5))
+#12 2.053   Downloading prometheus_client-0.26.0-py3-none-any.whl.metadata (2.1 kB)
+#12 2.209 Collecting pydantic==2.14.0 (from -r requirements-serve.txt (line 6))
+#12 2.276   Downloading pydantic-2.14.0-py3-none-any.whl.metadata (131 kB)
+#12 2.337      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 131.6/131.6 kB 2.1 MB/s eta 0:00:00
+#12 2.466 Collecting scikit-learn==1.9.1 (from -r requirements-serve.txt (line 7))
+#12 2.530   Downloading scikit_learn-1.9.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.3 kB)
+#12 2.621 Collecting uvicorn==0.54.0 (from -r requirements-serve.txt (line 8))
+#12 2.686   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+#12 2.789 Collecting starlette>=0.46.0 (from fastapi==0.143.0->-r requirements-serve.txt (line 1))
+#12 2.854   Downloading starlette-1.9.0-py3-none-any.whl.metadata (6.6 kB)
+#12 2.934 Collecting typing-extensions>=4.8.0 (from fastapi==0.143.0->-r requirements-serve.txt (line 1))
+#12 2.996   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#12 3.062 Collecting typing-inspection>=0.4.2 (from fastapi==0.143.0->-r requirements-serve.txt (line 1))
+#12 3.126   Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+#12 3.191 Collecting annotated-doc>=0.0.2 (from fastapi==0.143.0->-r requirements-serve.txt (line 1))
+#12 3.258   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+#12 3.334 Collecting opentelemetry-api>=1.44.0 (from fastapi==0.143.0->-r requirements-serve.txt (line 1))
+#12 3.398   Downloading opentelemetry_api-1.45.1-py3-none-any.whl.metadata (1.4 kB)
+#12 3.502 Collecting cloudpickle>=3.0 (from joblib==1.6.0->-r requirements-serve.txt (line 2))
+#12 3.572   Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+#12 3.678 Collecting python-dateutil>=2.8.2 (from pandas==3.0.6->-r requirements-serve.txt (line 4))
+#12 3.744   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+#12 3.822 Collecting annotated-types>=0.6.0 (from pydantic==2.14.0->-r requirements-serve.txt (line 6))
+#12 3.886   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+#12 4.572 Collecting pydantic-core==2.50.0 (from pydantic==2.14.0->-r requirements-serve.txt (line 6))
+#12 4.638   Downloading pydantic_core-2.50.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.5 kB)
+#12 4.849 Collecting scipy>=1.10.0 (from scikit-learn==1.9.1->-r requirements-serve.txt (line 7))
+#12 4.914   Downloading scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+#12 4.924      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.1/62.1 kB 15.5 MB/s eta 0:00:00
+#12 5.046 Collecting narwhals>=2.0.1 (from scikit-learn==1.9.1->-r requirements-serve.txt (line 7))
+#12 5.109   Downloading narwhals-2.27.1-py3-none-any.whl.metadata (15 kB)
+#12 5.175 Collecting threadpoolctl>=3.5.0 (from scikit-learn==1.9.1->-r requirements-serve.txt (line 7))
+#12 5.239   Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+#12 5.384 Collecting click>=7.0 (from uvicorn==0.54.0->-r requirements-serve.txt (line 8))
+#12 5.453   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+#12 5.517 Collecting h11>=0.8 (from uvicorn==0.54.0->-r requirements-serve.txt (line 8))
+#12 5.579   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#12 5.673 Collecting six>=1.5 (from python-dateutil>=2.8.2->pandas==3.0.6->-r requirements-serve.txt (line 4))
+#12 5.738   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+#12 5.848 Collecting anyio<5,>=4.0.0 (from starlette>=0.46.0->fastapi==0.143.0->-r requirements-serve.txt (line 1))
+#12 5.910   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+#12 5.998 Collecting idna>=2.8 (from anyio<5,>=4.0.0->starlette>=0.46.0->fastapi==0.143.0->-r requirements-serve.txt (line 1))
+#12 6.062   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+#12 6.141 Downloading fastapi-0.143.0-py3-none-any.whl (144 kB)
+#12 6.156    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 144.7/144.7 kB 10.1 MB/s eta 0:00:00
+#12 6.223 Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+#12 6.289    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 306.1/306.1 kB 4.7 MB/s eta 0:00:00
+#12 6.356 Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+#12 12.31    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 2.0 MB/s eta 0:00:00
+#12 12.38 Downloading pandas-3.0.6-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (11.1 MB)
+#12 16.46    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.1/11.1 MB 2.8 MB/s eta 0:00:00
+#12 16.53 Downloading prometheus_client-0.26.0-py3-none-any.whl (64 kB)
+#12 16.54    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.5/64.5 kB 6.5 MB/s eta 0:00:00
+#12 16.61 Downloading pydantic-2.14.0-py3-none-any.whl (487 kB)
+#12 16.75    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 487.1/487.1 kB 3.4 MB/s eta 0:00:00
+#12 16.81 Downloading scikit_learn-1.9.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.3 MB)
+#12 18.95    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 4.4 MB/s eta 0:00:00
+#12 19.01 Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+#12 19.02    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.4/87.4 kB 8.5 MB/s eta 0:00:00
+#12 19.09 Downloading pydantic_core-2.50.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.2 MB)
+#12 19.44    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 6.1 MB/s eta 0:00:00
+#12 19.50 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+#12 19.58 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+#12 19.64 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+#12 19.66    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 125.3/125.3 kB 7.8 MB/s eta 0:00:00
+#12 19.72 Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+#12 19.78 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#12 19.85 Downloading narwhals-2.27.1-py3-none-any.whl (483 kB)
+#12 19.92    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 483.2/483.2 kB 7.1 MB/s eta 0:00:00
+#12 19.99 Downloading opentelemetry_api-1.45.1-py3-none-any.whl (60 kB)
+#12 20.00    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.3/60.3 kB 17.8 MB/s eta 0:00:00
+#12 20.06 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#12 20.09    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 8.3 MB/s eta 0:00:00
+#12 20.15 Downloading scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+#12 29.63    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.3/35.3 MB 3.9 MB/s eta 0:00:00
+#12 29.70 Downloading starlette-1.9.0-py3-none-any.whl (80 kB)
+#12 29.71    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.3/80.3 kB 7.0 MB/s eta 0:00:00
+#12 29.78 Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+#12 29.84 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#12 29.85    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 6.7 MB/s eta 0:00:00
+#12 29.92 Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+#12 29.99 Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+#12 30.01    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 6.5 MB/s eta 0:00:00
+#12 30.07 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+#12 30.14 Downloading idna-3.20-py3-none-any.whl (69 kB)
+#12 30.15    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 7.5 MB/s eta 0:00:00
+#12 30.38 Installing collected packages: typing-extensions, threadpoolctl, six, prometheus_client, numpy, narwhals, idna, h11, cloudpickle, click, annotated-types, annotated-doc, uvicorn, typing-inspection, scipy, python-dateutil, pydantic-core, opentelemetry-api, joblib, anyio, starlette, scikit-learn, pydantic, pandas, fastapi
+#12 40.11 Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 click-8.5.0 cloudpickle-3.1.2 fastapi-0.143.0 h11-0.16.0 idna-3.20 joblib-1.6.0 narwhals-2.27.1 numpy-2.4.6 opentelemetry-api-1.45.1 pandas-3.0.6 prometheus_client-0.26.0 pydantic-2.14.0 pydantic-core-2.50.0 python-dateutil-2.9.0.post0 scikit-learn-1.9.1 scipy-1.17.1 six-1.17.0 starlette-1.9.0 threadpoolctl-3.7.0 typing-extensions-4.16.0 typing-inspection-0.4.4 uvicorn-0.54.0
+#12 DONE 40.8s
+
+#13 [stage-1 4/8] COPY --from=builder /opt/venv /opt/venv
+#13 DONE 1.2s
+
 #14 [stage-1 5/8] COPY src/ ./src/
 #14 DONE 0.1s
 
 #15 [stage-1 6/8] RUN test -f src/api.py || (echo "ERROR: src/api.py missing" >&2; exit 1)
-#15 DONE 0.1s
+#15 DONE 0.2s
 
 #16 [stage-1 7/8] COPY models/model.joblib ./models/model.joblib
 #16 DONE 0.0s
 
 #17 [stage-1 8/8] RUN mkdir -p logs && chown -R app:app /app
-#17 DONE 0.1s
+#17 DONE 0.3s
 
 #18 exporting to image
 #18 exporting layers
-#18 exporting layers 13.3s done
-#18 exporting manifest sha256:b6890c345636d576dbae3ffeeace46441f95e3d9212dabdb7c6eea16c50ee7ae done
-#18 exporting config sha256:642b877dbb3e781e7214d15e41f614c9ce55bd0f294b0bcc336930421a97a287 done
-#18 exporting attestation manifest sha256:a22b23983bec9c72cdbfa9845ae6ba67740cd3452055c605f5317fbaa6f88d17 done
-#18 exporting manifest list sha256:47b2aaf28f1566dab6e615545bc2385924d62449030d52f5c4854f6158385535 done
-#18 naming to docker.io/library/heart-disease-api:latest done
-#18 unpacking to docker.io/library/heart-disease-api:latest
-#18 unpacking to docker.io/library/heart-disease-api:latest 3.1s done
-#18 DONE 16.4s
-
-View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/xluo87noj5m5jvtl2dlvhssie
+#18 exporting layers 9.8s done
+#18 exporting manifest sha256:f0e1130501b5a7dc91aeab6c47ebf1fef21cf4c32cfe3853fe02a1f1c689f1f4 0.0s done
+#18 exporting config sha256:0580cbd5ad81a58f8b1b9825a56a852e315108743cc5b6ac9e499954db74de91 0.0s done
+#18 exporting attestation manifest sha256:bf415fc74df0d0e141733f8de756e9bc0f6d0976f932552166e8f0c6d37bc395 0.0s done
+#18 exporting manifest list sha256:54f844806ceb1d03bdb1b5c902582f743c6c9e556fd453dee8cae3b8a8908dae 0.0s done
+#18 naming to docker.io/library/heart-disease-api:1.0.0 done
+#18 unpacking to docker.io/library/heart-disease-api:1.0.0
+#18 unpacking to docker.io/library/heart-disease-api:1.0.0 3.5s done
+#18 DONE 13.5s

@@ -22,21 +22,21 @@ Logistic Regression over `C` in {0.03, 0.3, 3}; Random Forest (300 trees) over
 `max_depth` in {3, 6, None} x `min_samples_leaf` in {1, 4}. Grids are deliberately small:
 with ~240 training rows a large search mostly fits CV noise.
 
-| run | cv acc | cv precision | cv recall | cv ROC-AUC | test ROC-AUC |
-|---|---|---|---|---|---|
-| logreg-C0.03 | 0.814 | 0.866 | 0.711 | 0.888 ± 0.023 | 0.964 |
-| logreg-C0.3 | 0.847 | 0.877 | 0.783 | 0.904 ± 0.016 | 0.970 |
-| logreg-C3.0 | 0.847 | 0.877 | 0.783 | 0.902 ± 0.014 | 0.963 |
-| random_forest-max_depth3-min_samples_leaf1 | 0.826 | 0.860 | 0.755 | 0.893 ± 0.024 | 0.947 |
-| random_forest-max_depth3-min_samples_leaf4 | 0.822 | 0.849 | 0.755 | 0.895 ± 0.023 | 0.950 |
-| random_forest-max_depth6-min_samples_leaf1 | 0.822 | 0.845 | 0.764 | 0.879 ± 0.026 | 0.949 |
-| random_forest-max_depth6-min_samples_leaf4 | 0.830 | 0.847 | 0.783 | 0.894 ± 0.026 | 0.946 |
-| random_forest-max_depthNone-min_samples_leaf1 | 0.814 | 0.810 | 0.783 | 0.876 ± 0.037 | 0.948 |
-| random_forest-max_depthNone-min_samples_leaf4 | 0.826 | 0.846 | 0.774 | 0.894 ± 0.025 | 0.947 |
+| run | cv acc | cv precision | cv recall | cv ROC-AUC | test ROC-AUC | run id |
+|---|---|---|---|---|---|---|
+| logreg-C0.03 | 0.814 | 0.866 | 0.711 | 0.888 ± 0.023 | 0.964 | `7076db35cd354c7981c341a276b2dce8` |
+| logreg-C0.3 | 0.847 | 0.877 | 0.783 | 0.904 ± 0.016 | 0.970 | `9fc328081ab84c37a9473461a239278a` |
+| logreg-C3.0 | 0.847 | 0.877 | 0.783 | 0.902 ± 0.014 | 0.963 | `66d9bef3cf38433fa2167e00e5992d11` |
+| random_forest-max_depth3-min_samples_leaf1 | 0.826 | 0.860 | 0.755 | 0.893 ± 0.024 | 0.947 | `c900b437add540508ec18963179c8168` |
+| random_forest-max_depth3-min_samples_leaf4 | 0.822 | 0.849 | 0.755 | 0.895 ± 0.023 | 0.950 | `b489ac93867341a3ae06bcb4a107dbec` |
+| random_forest-max_depth6-min_samples_leaf1 | 0.822 | 0.845 | 0.764 | 0.879 ± 0.026 | 0.949 | `36ec798779df446fbd197efb4238ee0b` |
+| random_forest-max_depth6-min_samples_leaf4 | 0.830 | 0.847 | 0.783 | 0.894 ± 0.026 | 0.946 | `d051332eb3e445ffb2306b2026dd2947` |
+| random_forest-max_depthNone-min_samples_leaf1 | 0.814 | 0.810 | 0.783 | 0.876 ± 0.037 | 0.948 | `08bdadf883d14d15a707f5ea1e22da20` |
+| random_forest-max_depthNone-min_samples_leaf4 | 0.826 | 0.846 | 0.774 | 0.894 ± 0.025 | 0.947 | `d7c1f4a6055a4e89a8f362fb20676ff6` |
 
 ## Winner: `logreg-C0.3`
 Chosen for the highest mean CV ROC-AUC (0.904); registered in the MLflow
-registry as `heart-disease-classifier` v2.
+registry as `heart-disease-classifier` v1.
 
 ## Decision threshold chosen for recall
 In screening, a missed patient (false negative) costs more than an extra follow-up. The

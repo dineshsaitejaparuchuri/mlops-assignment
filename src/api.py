@@ -68,7 +68,8 @@ async def log_requests(request: Request, call_next):
         return response
     finally:
         elapsed = time.perf_counter() - start
-        path = request.url.path
+        route = request.scope.get("route")
+        path = getattr(route, "path", "/__unmatched__")
         if path != "/metrics":
             REQUESTS.labels(request.method, path, str(status)).inc()
             LATENCY.labels(path).observe(elapsed)
@@ -90,7 +91,8 @@ def predict(patient: PatientFeatures) -> Prediction:
     pred = int(p_disease >= state["threshold"])
     PREDICTIONS.labels(LABELS[pred]).inc()
     return Prediction(prediction=pred, label=LABELS[pred],
-                      confidence=round(p_disease if pred else 1 - p_disease, 4),
+                      probability_predicted_class=round(
+                          p_disease if pred else 1 - p_disease, 4),
                       probability_disease=round(p_disease, 4))
 
 
