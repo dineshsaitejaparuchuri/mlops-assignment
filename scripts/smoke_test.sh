@@ -17,5 +17,6 @@ echo "POST /predict"
 curl -fsS -X POST "$BASE_URL/predict" -H 'Content-Type: application/json' -d "$PAYLOAD"; echo
 
 echo "GET /metrics"
-curl -fsS "$BASE_URL/metrics" | head -n 5
+curl -fsS "$BASE_URL/metrics" >/dev/null
+echo "metrics endpoint OK"
 echo "smoke test passed"
