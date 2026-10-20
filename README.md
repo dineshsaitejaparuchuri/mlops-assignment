@@ -8,11 +8,11 @@ The model is an educational demonstration, not a medical device. Its scores shou
 
 - The project code, report, screenshots, notebooks, deployment manifests, and local run logs are included in this package.
 - A fresh local validation run passed all 18 unit tests, compiled the Python source/scripts, parsed all 16 YAML files, and passed a live FastAPI smoke test for `/health`, `/predict`, and `/metrics`. The current environment did not have Flake8 installed, so the hosted workflow will be the next fresh lint run.
-- The GitHub-hosted CI workflow passed at commit `c492b3d` (run 3). The next run adds a disposable kind cluster and an end-to-end Kubernetes Ingress check using `cloud-provider-kind`; that run is pending.
-- The project has no persistent public API URL. Local kind deployment and port-forward evidence are included, and the new CI check will verify the routed API endpoints in an ephemeral cluster.
+- The GitHub-hosted CI workflow passed at commit `1978afe` (run [#4](https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39387758630)), including an end-to-end Kubernetes Ingress check in a disposable kind cluster using `cloud-provider-kind`.
+- The project has no persistent public API URL. Local kind deployment and port-forward evidence are included, and hosted CI verified `/health`, `/predict`, and `/metrics` through the Ingress route in its temporary cluster.
 - The assignment video is intentionally left for the student to record.
 
-The repository URL and student details are inserted during the publishing step so that the first commit contains the completed report. See [`docs/UPLOAD_TO_GITHUB.md`](docs/UPLOAD_TO_GITHUB.md) for the steps.
+The report contains the repository URL and student details. See [`docs/UPLOAD_TO_GITHUB.md`](docs/UPLOAD_TO_GITHUB.md) for repository and course-submission guidance.
 
 ## Quick start (Windows PowerShell)
 

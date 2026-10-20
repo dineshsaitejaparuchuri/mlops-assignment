@@ -561,8 +561,8 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
       P("<b>Local and hosted CI evidence.</b> <font face='Courier'>scripts/run_ci_local.sh</font> "
         "executes the prior workflow with <font face='Courier'>act</font> and local stubs for GitHub-only actions; "
         "its captured run passed 18 tests, lint, training, Docker build and container smoke tests. "
-        "GitHub Actions run #3 also passed those hosted steps. The updated workflow adds the kind Ingress "
-        "test; check the latest Actions run for its result. Local log: docs/run_outputs/act_ci_full.txt."),
+        "GitHub Actions run #3 also passed those hosted steps. The updated workflow's kind Ingress test "
+        "passed in run #4. Local log: docs/run_outputs/act_ci_full.txt."),
       img(SHOTS / "ci_run.png", width=10.5 * cm, caption="Figure 11 - local run of the CI workflow "
           "(act; real captured output, rendered to PNG)"),
       PageBreak()]
