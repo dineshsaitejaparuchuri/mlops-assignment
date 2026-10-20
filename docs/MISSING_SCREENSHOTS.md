@@ -1,20 +1,20 @@
-# Verification evidence and remaining external checks
+# Verification evidence and remaining actions
 
-The screenshots and text logs in this repository document earlier local runs. Terminal images are rendered from the corresponding saved command output; browser images were captured from the local services. They are evidence of those local runs, not claims that the same steps were rerun in this packaging environment.
+The screenshots and logs in this repository document captured local runs. Terminal images were rendered from the corresponding saved command output; browser images were captured from the local services. They remain evidence of those runs and are not presented as new captures from the current machine.
 
 | Evidence | What it shows | Status |
 |---|---|---|
-| `terminal_pytest.png`, `docs/run_outputs/pytest_verbose.txt` | 18 unit tests | Captured successful run; the tests also passed again during this review. |
-| `terminal_flake8.png`, `docs/run_outputs/flake8_run.txt` | Flake8 lint run | Captured successful run. Flake8 was not installed in the packaging environment, and network access was unavailable to install it again. |
-| `docker_build_run.png`, `docs/run_outputs/docker_build.txt`, `docker_run.txt` | Docker build/run and API smoke test | Captured local run; Docker is not installed in the packaging environment for a fresh rerun. |
-| `k8s_pods_services.png`, `k8s_smoke_test.png`, `docs/run_outputs/k8s_*.txt` | Local kind cluster and API smoke test via port-forward | Captured successful local run. Kubernetes tools are not installed in the packaging environment for a fresh rerun. |
+| `terminal_pytest.png`, `docs/run_outputs/pytest_verbose.txt` | 18 unit tests | Captured successful local run; GitHub Actions run #3 also passed the test step. |
+| `terminal_flake8.png`, `docs/run_outputs/flake8_run.txt` | Flake8 lint run | Captured successful local run; GitHub Actions run #3 also passed lint. |
+| `docker_build_run.png`, `docs/run_outputs/docker_build.txt`, `docker_run.txt` | Docker build/run and API smoke test | Captured successful local run; GitHub Actions run #3 also built and smoke-tested the container. |
+| `k8s_pods_services.png`, `k8s_smoke_test.png`, `docs/run_outputs/k8s_*.txt` | Local kind deployment and API checks through port-forward | Captured successful local run. A new hosted workflow step is being added to test the Ingress route in a disposable kind cluster. |
 | `grafana_dashboard.png`, `prometheus_targets.png` | Monitoring dashboard and Prometheus scrape targets | Captured local browser screenshots. |
-| `ci_run.png`, `docs/run_outputs/act_ci_full.txt` | Local run of `.github/workflows/ci.yml` using `act` | Captured successful local run; this is not a GitHub-hosted Actions result. |
+| `ci_run.png`, `docs/run_outputs/act_ci_full.txt` | Local run of `.github/workflows/ci.yml` using `act` | Captured successful local run. Hosted Actions run [#3](https://github.com/dineshsaitejaparuchuri/mlops-assignment/actions/runs/39385497122) also passed all existing CI steps. |
 
-## Still required outside this package
+## Remaining actions
 
-- **GitHub repository and hosted CI:** the source package has not been pushed. The GitHub tools available in this session did not expose a repository-creation action, and no repositories were returned by the connector. Use `scripts/publish_to_github.ps1` on Windows after installing Git/GitHub CLI and authenticating with `gh auth login`; it asks for repository visibility before creating the remote and pushing. Then open the GitHub Actions tab and confirm the hosted `ci` workflow succeeds.
-- **Ingress route:** `k8s/ingress.yaml` is present and was previously server-side dry-run validated, but an ingress-nginx controller was not installed in the captured run. The screenshots therefore prove API access by port-forward, not public/Ingress routing. Install and test the ingress controller on the target local Kubernetes cluster before claiming that route is verified.
-- **Student details:** add the required student name and roll number to the report.
-- **Repository URL:** after the push, rebuild the PDF with `HEART_MLOPS_REPO_URL` set to the actual GitHub URL so the submitted report has a working code link.
-- **Video:** intentionally not included, as requested. Use `docs/demo_video_script.md` as an outline if a recording is required later.
+- Push the current local code and documentation updates to the existing GitHub repository, then confirm the new workflow run including kind Ingress verification succeeds.
+- Rebuild the report from the updated source with the repository URL and student details set in the environment. Confirm the PDF still has 10 pages.
+- Submit the repository and report through the course portal. That account and submission step are outside this workspace.
+- The project has no persistent public API endpoint. The new Ingress check will run in an ephemeral CI cluster; it validates the route but does not create a long-lived deployment.
+- The video is intentionally excluded at the student's request.

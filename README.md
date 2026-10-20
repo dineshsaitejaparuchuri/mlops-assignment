@@ -8,7 +8,8 @@ The model is an educational demonstration, not a medical device. Its scores shou
 
 - The project code, report, screenshots, notebooks, deployment manifests, and local run logs are included in this package.
 - A fresh local validation run passed all 18 unit tests, compiled the Python source/scripts, parsed all 16 YAML files, and passed a live FastAPI smoke test for `/health`, `/predict`, and `/metrics`. The current environment did not have Flake8 installed, so the hosted workflow will be the next fresh lint run.
-- GitHub-hosted Actions and a working NGINX Ingress route still need external verification after the repository is published and the necessary cluster components are installed.
+- The GitHub-hosted CI workflow passed at commit `c492b3d` (run 3). The next run adds a disposable kind cluster and an end-to-end Kubernetes Ingress check using `cloud-provider-kind`; that run is pending.
+- The project has no persistent public API URL. Local kind deployment and port-forward evidence are included, and the new CI check will verify the routed API endpoints in an ephemeral cluster.
 - The assignment video is intentionally left for the student to record.
 
 The repository URL and student details are inserted during the publishing step so that the first commit contains the completed report. See [`docs/UPLOAD_TO_GITHUB.md`](docs/UPLOAD_TO_GITHUB.md) for the steps.
@@ -65,7 +66,7 @@ For Compose, run `docker compose up --build`.
 
 ## Kubernetes and monitoring
 
-The `k8s/` folder contains the namespace, Deployment, Service, NodePort, Ingress, and monitoring manifests. Local deployment instructions are in [`scripts/deploy_local.sh`](scripts/deploy_local.sh) (run it in Git Bash or WSL on Windows). The Ingress resource requires an installed ingress controller; without it, the provided port-forward path is the verified access method. The Prometheus and Grafana configuration lives under `monitoring/` and `k8s/monitoring/`.
+The `k8s/` folder contains the namespace, Deployment, Service, NodePort, Ingress, and monitoring manifests. Local deployment instructions are in [`scripts/deploy_local.sh`](scripts/deploy_local.sh) (run it in Git Bash or WSL on Windows). The classless Ingress is for kind with the Kubernetes SIG Network `cloud-provider-kind` provider (v0.9.0 or newer); the project avoids [Ingress NGINX, retired in March 2026](https://kubernetes.io/blog/2026/03/30/kubernetes-v1-36-sneak-peek/). Without a provider, use the documented port-forward path. The Prometheus and Grafana configuration lives under `monitoring/` and `k8s/monitoring/`.
 
 ## Repository map
 
@@ -96,4 +97,4 @@ mlflow ui --port 5000
 
 ## Caveats
 
-The dataset is small and historical, and the reported results come from one held-out split. This project demonstrates a reproducible software workflow; it does not establish clinical validity. The publishing script asks for your student name and roll number, rebuilds the report with those details and the planned repository URL, and then creates and pushes the repository. The hosted CI workflow and live Ingress route still need verification after publication.
+The dataset is small and historical, and the reported results come from one held-out split. This project demonstrates a reproducible software workflow; it does not establish clinical validity. The report includes the student details and repository URL. GitHub Actions verifies the CI pipeline; the kind Ingress test runs in a disposable CI cluster and does not create a persistent public endpoint. The course portal upload and video recording remain outside this repository; the video is intentionally omitted at the student's request.

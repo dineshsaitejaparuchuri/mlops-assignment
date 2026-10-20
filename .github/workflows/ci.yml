@@ -52,13 +52,40 @@ jobs:
           du -sh mlruns >> ci-output/mlruns-summary.txt
 
       - name: Build Docker image
-        run: docker build -t heart-disease-api:ci .
+        run: docker build -t heart-disease-api:ci -t heart-disease-api:latest .
 
       - name: Smoke test container
         run: |
           set -o pipefail
           docker run -d --name heart-api -p 8000:8000 heart-disease-api:ci
           bash scripts/smoke_test.sh http://localhost:8000 2>&1 | tee ci-output/smoke.txt
+
+      - name: Install Kubernetes tools
+        run: |
+          set -euo pipefail
+          kind_version=v0.33.0
+          kind_sha256=aee6151561422756b764a4ae28e7f44cda5af5a9eead3cc9985112b1de8d8e0d
+          curl -fsSLo "$RUNNER_TEMP/kind" "https://github.com/kubernetes-sigs/kind/releases/download/${kind_version}/kind-linux-amd64"
+          echo "${kind_sha256}  $RUNNER_TEMP/kind" | sha256sum --check
+          sudo install -m 0755 "$RUNNER_TEMP/kind" /usr/local/bin/kind
+
+          kubectl_version=v1.36.4
+          curl -fsSLo "$RUNNER_TEMP/kubectl" "https://dl.k8s.io/release/${kubectl_version}/bin/linux/amd64/kubectl"
+          curl -fsSLo "$RUNNER_TEMP/kubectl.sha256" "https://dl.k8s.io/release/${kubectl_version}/bin/linux/amd64/kubectl.sha256"
+          echo "$(cat "$RUNNER_TEMP/kubectl.sha256")  $RUNNER_TEMP/kubectl" | sha256sum --check
+          sudo install -m 0755 "$RUNNER_TEMP/kubectl" /usr/local/bin/kubectl
+
+          cloud_provider_version=0.12.0
+          cloud_provider_sha256=5716aca8f01a85172c12f3b6329c70f151bec02c91b6f600c9f230845ee138e6
+          cloud_provider_archive="$RUNNER_TEMP/cloud-provider-kind.tar.gz"
+          curl -fsSLo "$cloud_provider_archive" "https://github.com/kubernetes-sigs/cloud-provider-kind/releases/download/v${cloud_provider_version}/cloud-provider-kind_${cloud_provider_version}_linux_amd64.tar.gz"
+          echo "${cloud_provider_sha256}  ${cloud_provider_archive}" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/cloud-provider-kind"
+          tar -xzf "$cloud_provider_archive" -C "$RUNNER_TEMP/cloud-provider-kind"
+          sudo install -m 0755 "$RUNNER_TEMP/cloud-provider-kind/cloud-provider-kind" /usr/local/bin/cloud-provider-kind
+
+      - name: Deploy Kubernetes manifests and verify Ingress
+        run: bash scripts/test_kind_ingress.sh
 
       - name: Container logs
         if: always()

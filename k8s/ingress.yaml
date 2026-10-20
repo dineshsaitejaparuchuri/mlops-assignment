@@ -4,7 +4,6 @@ metadata:
   name: heart-api
   namespace: heart-mlops
 spec:
-  ingressClassName: nginx
   rules:
     - host: heart.local
       http:

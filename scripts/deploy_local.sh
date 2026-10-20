@@ -31,5 +31,7 @@ Deployed. Port-forward in separate terminals:
   kubectl -n heart-mlops port-forward svc/prometheus 9090:9090
   kubectl -n heart-mlops port-forward svc/grafana 3000:3000
 Then: scripts/smoke_test.sh http://localhost:8000
-Ingress (optional, needs ingress-nginx): kubectl apply -f k8s/ingress.yaml
+Ingress routing is verified in CI with kind and cloud-provider-kind. For local Ingress,
+start cloud-provider-kind v0.9.0+ against your kind cluster, then run:
+  kubectl apply -f k8s/ingress.yaml
 MSG

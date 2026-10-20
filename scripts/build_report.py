@@ -172,7 +172,7 @@ def draw_architecture(path: Path) -> None:
     ax.add_patch(FancyBboxPatch((0.2, 0.2), 10.6, 2.0, boxstyle="round,pad=0.04",
                                 fc="none", ec="#555", lw=1.4, ls="--"))
     ax.text(0.4, 1.95, "Kubernetes namespace: heart-mlops", fontsize=8.5, weight="bold")
-    box(0.5, 0.45, 2.0, 0.9, "Ingress (nginx)\nheart.local\nor NodePort 30080", "#fde8c8")
+    box(0.5, 0.45, 2.0, 0.9, "Ingress (cloud-provider-kind)\nheart.local\nor NodePort 30080", "#fde8c8")
     box(3.0, 0.45, 2.0, 0.9, "Service heart-api\nClusterIP :80", "#fde8c8")
     box(5.5, 0.45, 2.2, 0.9, "Deployment heart-api\n2 replicas, probes,\nrolling update", "#d6e8fa")
     box(8.2, 0.45, 2.4, 0.9, "Prometheus -> Grafana\n(scrape /metrics,\nrequest rate / p95 / errors)", "#d6f0d6")
@@ -342,8 +342,9 @@ toc = ["1. Setup and installation", "2. Data acquisition and EDA",
 s += bullets(toc)
 s += [Spacer(1, 1 * cm),
       P("<b>Scope and verification.</b> The results and screenshots in this report come from the project artifacts and captured runs. "
-        "Docker, a local Kubernetes cluster, Prometheus, Grafana and the CI workflow were exercised locally. "
-        "The CI workflow was run with <font face='Courier'>act</font>; it has not yet been verified on GitHub-hosted runners. "
+        "Docker, a local Kubernetes cluster, Prometheus and Grafana were exercised locally. "
+        "GitHub Actions run #3 passed the existing pipeline; the current workflow adds a disposable kind cluster "
+        "and routed Ingress smoke test, whose result is recorded in the repository Actions run. "
         "The local MLflow run store is generated during training and is not included in the source archive, so the report builder "
         "can also read the committed experiment summary on a clean checkout.",
         BODY), PageBreak()]
@@ -547,22 +548,21 @@ s += [P("6. CI/CD pipeline and automated testing", H1),
              ["4", "Train model", "python -m src.train (9 MLflow runs) -> ci-output/train.txt"],
              ["5", "Verify artifacts", "models/model.joblib and metrics.json must exist"],
              ["6", "Summarise MLflow runs", "lists run metadata -> ci-output/mlruns-summary.txt"],
-             ["7", "Build Docker image", "docker build -t heart-disease-api:ci ."],
+             ["7", "Build Docker image", "docker build -t heart-disease-api:ci and :latest ."],
              ["8", "Smoke test container", "scripts/smoke_test.sh: /health, /predict, /metrics"],
-             ["9", "Container logs", "always(): docker logs -> ci-output/container.log"],
-             ["10", "Upload artifacts", "always(): model, metrics, logs/, ci-output/, mlruns/"]],
+             ["9", "Kubernetes Ingress", "disposable kind cluster; route all smoke checks via heart.local"],
+             ["10", "Container logs", "always(): docker logs -> ci-output/container.log"],
+             ["11", "Upload artifacts", "always(): model, metrics, logs/, ci-output/, mlruns/"]],
             [0.8 * cm, 4.4 * cm, W - 5.2 * cm]),
       Spacer(1, 6),
-      P("Retraining in CI is intended to catch changes that break the training process, saved-model contract or container before a change is merged. Each workflow run also uploads logs, JUnit output, the model and the MLflow run store for inspection. "
-        "The included screenshot is from the local <font face='Courier'>act</font> run; a hosted GitHub Actions run still needs to be triggered after the repository is published."),
+      P("Retraining in CI is intended to catch changes that break the training process, saved-model contract or container before a change is merged. Each workflow run also uploads logs, JUnit output, the model and the MLflow run store for inspection. The GitHub Actions workflow additionally creates a disposable kind cluster, installs the project manifests and tests the API through the Ingress host route. That cluster is deleted at the end of the job; it is not a persistent deployment."),
       img(SHOTS / "terminal_pytest.png", width=W, caption="Figure 10 - pytest -v output "
           "(text captured from a real run, rendered to PNG; docs/run_outputs/pytest_verbose.txt)"),
-      P("<b>Local run of the CI workflow.</b> <font face='Courier'>scripts/run_ci_local.sh</font> "
-        "executes the unmodified <font face='Courier'>ci.yml</font> with <font face='Courier'>act</font> "
-        "inside a Python 3.11 runner container; only checkout, setup-python and upload-artifact are "
-        "replaced by local stubs (<font face='Courier'>.ci-local/</font>) so nothing contacts GitHub. "
-        "All steps succeeded: 18 tests passed, flake8 clean, model retrained, image built, container "
-        "smoke test passed, artifacts collected. Full log: docs/run_outputs/act_ci_full.txt."),
+      P("<b>Local and hosted CI evidence.</b> <font face='Courier'>scripts/run_ci_local.sh</font> "
+        "executes the prior workflow with <font face='Courier'>act</font> and local stubs for GitHub-only actions; "
+        "its captured run passed 18 tests, lint, training, Docker build and container smoke tests. "
+        "GitHub Actions run #3 also passed those hosted steps. The updated workflow adds the kind Ingress "
+        "test; check the latest Actions run for its result. Local log: docs/run_outputs/act_ci_full.txt."),
       img(SHOTS / "ci_run.png", width=10.5 * cm, caption="Figure 11 - local run of the CI workflow "
           "(act; real captured output, rendered to PNG)"),
       PageBreak()]
@@ -602,7 +602,7 @@ s += [P("8. Kubernetes deployment and monitoring", H1),
               "requests 100m/128Mi, limits 500m/512Mi, liveness + readiness probes on /health, "
               "Prometheus scrape annotations"],
              ["service.yaml", "ClusterIP service heart-api, port 80 -> container port 8000"],
-             ["ingress.yaml", "nginx Ingress, host heart.local -> heart-api"],
+             ["ingress.yaml", "classless Ingress, host heart.local -> heart-api (cloud-provider-kind)"],
              ["service-nodeport.yaml", "NodePort 30080 alternative (change type to LoadBalancer on "
               "a cloud cluster)"],
              ["monitoring/", "Prometheus (config map, RBAC, deployment, service), Grafana "
@@ -629,9 +629,9 @@ scripts/smoke_test.sh http://localhost:8000
       P("<b>Local Kubernetes evidence.</b> The captured kind-cluster run (<font face='Courier'>scripts/deploy_local.sh</font>) shows "
         "2/2 heart-api pods Ready, plus Prometheus and Grafana; the smoke test passed through "
         "<font face='Courier'>kubectl port-forward</font>; Prometheus showed both heart-api pods as "
-        "<i>up</i>, and the Grafana dashboard loaded with data. The Ingress manifest passed "
-        "<font face='Courier'>kubectl apply --dry-run=server</font>, but the ingress-nginx controller was not installed. "
-        "For that reason, the verified access path was port-forwarding; Ingress routing itself remains unverified."),
+        "<i>up</i>, and the Grafana dashboard loaded with data. In addition, the GitHub Actions workflow "
+        "tests the Ingress route in a disposable kind cluster using cloud-provider-kind. This confirms "
+        "routing for the CI environment only; no persistent public service is deployed."),
       img(SHOTS / "k8s_pods_services.png", width=W, max_h=5 * cm, caption="Figure 14 - kubectl get pods,svc "
           "(real captured text)"),
       img(SHOTS / "k8s_smoke_test.png", width=W, max_h=5 * cm, caption="Figure 15 - smoke test served by "
@@ -673,9 +673,9 @@ s += [P("9. Results and limitations", H1),
                 "project and not a medical device.",
                 "<b>Precision trade-off.</b> The 0.26 threshold maximises recall and therefore "
                 "produces more false positives.",
-                "<b>Deployment verification.</b> Everything was verified locally (Docker Desktop, kind, "
-                "act). The workflow has not run on GitHub-hosted runners, and the Ingress was only "
-                "dry-run validated because no ingress controller was installed.",
+                "<b>Deployment verification.</b> Local Docker and kind deployment evidence is included. "
+                "GitHub Actions run #3 passed the application pipeline; the updated workflow tests Ingress "
+                "routing in a disposable CI cluster. No persistent public API endpoint is deployed.",
                 "<b>Monitoring scope.</b> Operational metrics only: no data-drift or "
                 "prediction-distribution monitoring and no automated retraining trigger. "
                 "The MLflow store is local files, so it is not shared between machines."]),
@@ -708,7 +708,7 @@ s += [P("10. Repository and deliverables map", H1),
             [5.4 * cm, W - 5.4 * cm]),
       Spacer(1, 6),
       P("11. Evidence screenshots", H1),
-      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, plus captured test, lint, Docker, Kubernetes and local-CI output. Browser images were captured from local services; terminal images were rendered from saved command output. The GitHub-hosted Actions run and public Ingress route remain external verification items, as noted above.", BODY)]
+      P("The <font face='Courier'>screenshots/</font> folder contains EDA plots, MLflow pages, API documentation and sample responses, Prometheus/Grafana views, plus captured test, lint, Docker, Kubernetes and local-CI output. Browser images were captured from local services; terminal images were rendered from saved command output. Hosted CI status is available in the repository Actions tab. The Ingress route is tested in an ephemeral cluster; this does not provide a public endpoint.", BODY)]
 
 first = True
 for i, f in enumerate(s):
